@@ -18,6 +18,16 @@ export const columnMetadata: ColumnMetadataMap = {
     displayName: 'Temperature (°F)',
     format: '0.0',
   },
+  '[GravityAnomaly]': {
+    name: 'GravityAnomaly',
+    displayName: 'Anomalous gravity',
+    format: '0.000',
+  },
+  '[TemperatureAnomaly]': {
+    name: 'TemperatureAnomaly',
+    displayName: 'Anomalous temperature (°F)',
+    format: '0.0',
+  },
 };
 
 interface BatchSeriesParams {

@@ -16,6 +16,8 @@ EVALUATE
     Readings,
     [Hour],
     "Gravity", AVERAGEX(CURRENTGROUP(), BrewEvents[gravity]),
-    "Temperature", AVERAGEX(CURRENTGROUP(), BrewEvents[temp])
+    "Temperature", AVERAGEX(CURRENTGROUP(), BrewEvents[temp]),
+    "GravityAnomaly", MAXX(CURRENTGROUP(), IF(BrewEvents[gravityAnomaly], BrewEvents[gravity], 0)),
+    "TemperatureAnomaly", MAXX(CURRENTGROUP(), IF(BrewEvents[tempAnomaly], BrewEvents[temp], 0))
   )
 ORDER BY [Hour]

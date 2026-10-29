@@ -3,7 +3,20 @@
   "description": "Hourly average fermentation temperature",
   "width": "container",
   "height": "container",
-  "mark": { "type": "line", "interpolate": "monotone", "strokeWidth": 2.5, "color": "#c2410c" },
+  "layer": [
+    { "mark": { "type": "line", "interpolate": "monotone", "strokeWidth": 2.5, "color": "#c2410c" } },
+    {
+      "transform": [{ "filter": "datum.TemperatureAnomaly > 0" }],
+      "mark": { "type": "point", "filled": true, "size": 110, "color": "#dc2626", "stroke": "#ffffff", "strokeWidth": 1.5 },
+      "encoding": {
+        "y": { "field": "TemperatureAnomaly", "type": "quantitative" },
+        "tooltip": [
+          { "field": "Hour", "type": "temporal", "title": "Anomaly at", "format": "%b %-d, %-I:%M %p" },
+          { "field": "TemperatureAnomaly", "type": "quantitative", "title": "Anomalous temperature (°F)", "format": ".1f" }
+        ]
+      }
+    }
+  ],
   "encoding": {
     "x": {
       "field": "Hour",

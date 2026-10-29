@@ -20,7 +20,18 @@
       },
       "encoding": { "y2": { "datum": 1 } }
     },
-    { "mark": { "type": "line", "interpolate": "monotone", "strokeWidth": 2.5, "color": "#d97706" } }
+    { "mark": { "type": "line", "interpolate": "monotone", "strokeWidth": 2.5, "color": "#d97706" } },
+    {
+      "transform": [{ "filter": "datum.GravityAnomaly > 0" }],
+      "mark": { "type": "point", "filled": true, "size": 110, "color": "#dc2626", "stroke": "#ffffff", "strokeWidth": 1.5 },
+      "encoding": {
+        "y": { "field": "GravityAnomaly", "type": "quantitative" },
+        "tooltip": [
+          { "field": "Hour", "type": "temporal", "title": "Anomaly at", "format": "%b %-d, %-I:%M %p" },
+          { "field": "GravityAnomaly", "type": "quantitative", "title": "Anomalous gravity", "format": ".3f" }
+        ]
+      }
+    }
   ],
   "encoding": {
     "x": {

@@ -1,0 +1,21 @@
+// BrewEvents semantic model source query (DirectQuery).
+// Same columns as before (gravity, temp, eventtime) plus anomaly flags and deviations.
+//
+// Anomaly detection uses KQL's native series_decompose_anomalies(). Readings are grouped into
+// 6-hour chunks so the baseline follows slow drift and ramps; a flag from the model only counts
+// when the reading is also at least a minimum distance from its baseline. That floor stops tiny
+// sensor ticks on flat stretches being reported.
+let gravityMinDeviation = 0.003;   // SG
+let tempMinDeviation = 2.0;        // degrees F
+let sensitivity = 3.0;             // series_decompose_anomalies threshold (lower = more sensitive)
+TiltEvents
+| project gravity = toreal(gravity)/1000, temp = round(toreal(temp)*1.8 + 32, 1), eventtime
+| summarize g = make_list(gravity), t = make_list(temp), ts = make_list(eventtime) by chunk = bin(eventtime, 6h)
+| extend (gFlag, gScore, gBase) = series_decompose_anomalies(g, sensitivity, 0, "avg"),
+         (tFlag, tScore, tBase) = series_decompose_anomalies(t, sensitivity, 0, "avg")
+| mv-expand ts to typeof(datetime), g to typeof(real), t to typeof(real),
+            gFlag to typeof(int), gBase to typeof(real), tFlag to typeof(int), tBase to typeof(real)
+| extend gravityDeviation = round(g - gBase, 4), tempDeviation = round(t - tBase, 1)
+| extend gravityAnomaly = gFlag != 0 and abs(gravityDeviation) > gravityMinDeviation,
+         tempAnomaly = tFlag != 0 and abs(tempDeviation) > tempMinDeviation
+| project gravity = g, temp = t, eventtime = ts, gravityAnomaly, tempAnomaly, gravityDeviation, tempDeviation

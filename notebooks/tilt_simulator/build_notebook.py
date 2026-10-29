@@ -94,6 +94,11 @@ FERMENT_TEMP_RANGE_F = (60.0, 80.0)  # the band is placed somewhere in here
 TEMP_BAND_F = 2.0                # temperature stays within a band this wide during fermentation
 GRAVITY_NOISE = 0.3
 TEMP_NOISE_FRACTION = 0.12       # noise as a fraction of the half-band
+
+# Fault injection: occasional bad readings, so anomaly detection has something to find
+ANOMALIES_PER_DAY = 2.0          # average anomalous readings per day of active fermentation (0 = off)
+GRAVITY_ANOMALY_POINTS = (8, 20) # gravity spike or dip size in points (1.008-1.020 SG)
+TEMP_ANOMALY_F = (4.0, 9.0)      # temperature jump or drop in F
 ''', params=True)
 
 code('''
@@ -109,6 +114,7 @@ MODEL = {
     "pitch_f": list(PITCH_TEMP_RANGE_F), "onset_hours": list(ONSET_HOURS_RANGE), "cool_down_hours": COOL_DOWN_HOURS,
     "ferment_temp_f": list(FERMENT_TEMP_RANGE_F), "band_f": TEMP_BAND_F,
     "gravity_noise": GRAVITY_NOISE, "temp_noise_fraction": TEMP_NOISE_FRACTION,
+    "anomalies_per_day": ANOMALIES_PER_DAY, "gravity_anomaly": list(GRAVITY_ANOMALY_POINTS), "temp_anomaly_f": list(TEMP_ANOMALY_F),
 }
 MODEL_HASH = hashlib.md5(json.dumps(MODEL, sort_keys=True).encode()).hexdigest()
 IDLE_READING = (999, 20)
@@ -179,8 +185,20 @@ def reading(seq):
         return IDLE_READING
     rng = np.random.default_rng([SEED, b["idx"], 2, seq])
     gravity = b["fg"] + (b["og"] - b["fg"]) * (1.0 - _progress(b, h))
-    temp_c = (_temp_f(b, h, t_h, rng) - 32.0) * 5.0 / 9.0
-    return int(round(gravity + rng.normal(0, GRAVITY_NOISE))), round(float(temp_c), 1)
+    temp_f = _temp_f(b, h, t_h, rng)
+    gravity += rng.normal(0, GRAVITY_NOISE)
+    if ANOMALIES_PER_DAY > 0:
+        # Separate stream, so turning anomalies on or off never changes the normal series.
+        a = np.random.default_rng([SEED, b["idx"], 3, seq])
+        if a.random() < ANOMALIES_PER_DAY * INTERVAL_SECONDS / 86400.0:
+            sign = 1 if a.random() < 0.5 else -1
+            kind = a.integers(0, 3)   # 0 = gravity, 1 = temperature, 2 = both
+            if kind != 1:
+                gravity += sign * a.uniform(*GRAVITY_ANOMALY_POINTS)
+            if kind != 0:
+                temp_f += (1 if a.random() < 0.5 else -1) * a.uniform(*TEMP_ANOMALY_F)
+    temp_c = (temp_f - 32.0) * 5.0 / 9.0
+    return int(round(gravity)), round(float(temp_c), 1)
 
 
 def make_event(start_time, seq):
