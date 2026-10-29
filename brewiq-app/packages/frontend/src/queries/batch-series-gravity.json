@@ -1,0 +1,42 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Hourly average specific gravity",
+  "width": "container",
+  "height": "container",
+  "layer": [
+    {
+      "mark": {
+        "type": "area",
+        "interpolate": "monotone",
+        "line": false,
+        "color": {
+          "x1": 1, "y1": 1, "x2": 1, "y2": 0,
+          "gradient": "linear",
+          "stops": [
+            { "offset": 0, "color": "#f59e0b00" },
+            { "offset": 1, "color": "#f59e0b55" }
+          ]
+        }
+      },
+      "encoding": { "y2": { "datum": 1 } }
+    },
+    { "mark": { "type": "line", "interpolate": "monotone", "strokeWidth": 2.5, "color": "#d97706" } }
+  ],
+  "encoding": {
+    "x": {
+      "field": "Hour",
+      "type": "temporal",
+      "axis": { "title": null, "format": "%b %-d, %-I %p", "labelOverlap": true }
+    },
+    "y": {
+      "field": "Gravity",
+      "type": "quantitative",
+      "scale": { "zero": false, "domainMin": 1 },
+      "axis": { "title": "Specific gravity", "format": ".3f" }
+    },
+    "tooltip": [
+      { "field": "Hour", "type": "temporal", "title": "Time", "format": "%b %-d, %-I:%M %p" },
+      { "field": "Gravity", "type": "quantitative", "title": "Gravity", "format": ".3f" }
+    ]
+  }
+}

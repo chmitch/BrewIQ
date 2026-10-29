@@ -1,0 +1,194 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:is(.dark *));
+
+/* Bridged tokens — kept in `@theme static` so the CSS vars are always
+   emitted, not tree-shaken when no Tailwind utility consumes them.
+   Required because <VegaVisual> and <DataGrid> read these at runtime via
+   `useCssTheme()` and project them into a JS theme object (Vega's SVG output
+   cannot resolve `var()` references). */
+@theme static {
+  --color-brand: #b45309; /* bar/area fills, button-like brand surfaces */
+  --color-brand-foreground: #b45309; /* line/point marks, branded text & emphasis */
+  --color-hover: #f6efe4; /* row/cell hover surface in DataGrid + visuals */
+}
+
+@theme {
+  /* Color tokens — light theme
+     Usage: bg-*, text-*, border-* (e.g. bg-primary text-primary-foreground)
+     Each token has a -foreground pair for text on that surface. */
+  --color-background: #faf6ef; /* page background */
+  --color-foreground: #2a2118; /* default text */
+
+  --color-card: #ffffff; /* card surfaces */
+  --color-card-foreground: #2a2118;
+
+  --color-popover: #ffffff; /* popover/dropdown surfaces */
+  --color-popover-foreground: #2a2118;
+
+  --color-primary: #b45309; /* primary actions & buttons */
+  --color-primary-foreground: #ffffff;
+
+  --color-secondary: #f3ebdd; /* secondary actions */
+  --color-secondary-foreground: #2a2118;
+
+  --color-muted: #f0e8da; /* subtle backgrounds */
+  --color-muted-foreground: #6f6253; /* subdued text */
+
+  --color-accent: #f6efe4; /* accent highlights */
+  --color-accent-foreground: #2a2118;
+
+  --color-destructive: #c50f1f; /* errors & destructive actions */
+  --color-destructive-foreground: #ffffff;
+
+  --color-border: #e4d9c6; /* default border */
+  --color-input: #d9ccb5; /* input field borders */
+  --color-ring: #b45309; /* focus rings */
+
+  --radius-none: 0;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
+  --radius-2xl: 12px;
+  --radius-3xl: 16px;
+  --radius-4xl: 24px;
+  --radius-5xl: 32px;
+  --radius-6xl: 40px;
+  --radius-full: 9999px;
+  --radius: 6px;
+
+  /* Spacing — 4px grid; use only these tokens, no interpolation. *-nudge = base − 2px.
+     Usage: p-*, m-*, gap-* (e.g. p-400 gap-300) */
+  --spacing-none: 0;
+  --spacing-100-nudge: 2px;
+  --spacing-100: 4px;
+  --spacing-200-nudge: 6px;
+  --spacing-200: 8px;
+  --spacing-300-nudge: 10px;
+  --spacing-300: 12px;
+  --spacing-400: 16px;
+  --spacing-500: 20px;
+  --spacing-600: 24px;
+  --spacing-700: 28px;
+  --spacing-800: 32px;
+
+  /* Font Sizes — 100-based scale 
+     Usage: text-* (e.g. text-300, text-hero-900) */
+  --text-100: 10px;
+  --text-200: 12px;
+  --text-300: 14px;
+  --text-400: 16px;
+  --text-500: 20px;
+  --text-600: 24px;
+  --text-hero-700: 28px;
+  --text-hero-800: 32px;
+  --text-hero-900: 40px;
+  --text-hero-1000: 68px;
+
+  /* Line Heights — paired with font sizes
+     Usage: leading-* (e.g. leading-300) */
+  --leading-100: 14px;
+  --leading-200: 16px;
+  --leading-300: 20px;
+  --leading-400: 22px;
+  --leading-500: 28px;
+  --leading-600: 32px;
+  --leading-hero-700: 36px;
+  --leading-hero-800: 40px;
+  --leading-hero-900: 52px;
+  --leading-hero-1000: 92px;
+
+  /* Font Weights
+     Usage: font-* (e.g. font-semibold) */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Font Families
+     Usage: font-* (e.g. font-heading, font-base) */
+  --font-heading: Fraunces, Georgia, serif; /* headings, titles, display text */
+  --font-base:
+    Inter, 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; /* body text, labels, UI controls */
+  --font-monospace:
+    Consolas, 'Courier New', Courier, monospace; /* code, pre-formatted text */
+  --font-numeric:
+    Bahnschrift, 'Segoe UI',
+    /* KPI values, numeric displays */ 'Segoe UI Web (West European)',
+    -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+
+  /* Icon Sizes — 100-based scale
+     Usage: icon-size-* custom utility (e.g. icon-size-200) */
+  --icon-size-100: 12px;
+  --icon-size-200: 16px;
+  --icon-size-300: 20px;
+  --icon-size-400: 24px;
+  --icon-size-500: 28px;
+  --icon-size-600: 32px;
+  --icon-size-700: 48px;
+}
+
+@utility icon-size-* {
+  width: --value(--icon-size-*);
+  height: --value(--icon-size-*);
+}
+
+@layer base {
+  .dark {
+    /* Color tokens — dark theme */
+    --color-background: #1c1611;
+    --color-foreground: #f5ecdd;
+
+    --color-card: #262019;
+    --color-card-foreground: #f5ecdd;
+
+    --color-popover: #262019;
+    --color-popover-foreground: #f5ecdd;
+
+    --color-primary: #d97706;
+    --color-primary-foreground: #1c1611;
+
+    --color-secondary: #2f271e;
+    --color-secondary-foreground: #f5ecdd;
+
+    --color-muted: #2a231b;
+    --color-muted-foreground: #b3a590;
+
+    --color-accent: #3a3026;
+    --color-accent-foreground: #f5ecdd;
+
+    --color-destructive: #e5484d;
+    --color-destructive-foreground: #ffffff;
+
+    --color-border: #43382b;
+    --color-input: #4d4033;
+    --color-ring: #f59e0b;
+
+    --color-brand: #d97706;
+    --color-brand-foreground: #fbbf24;
+    --color-hover: #3a3026;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    /* Faint hop cones and bubbles, tiled over a soft amber glow. */
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' fill='none' stroke='%23b45309' stroke-opacity='.13' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='22' cy='34' r='6'/%3E%3Ccircle cx='38' cy='16' r='3'/%3E%3Ccircle cx='150' cy='132' r='7'/%3E%3Ccircle cx='168' cy='110' r='3.5'/%3E%3Ccircle cx='70' cy='168' r='4'/%3E%3Cg transform='translate(104 28)'%3E%3Cpath d='M0 0C13 6 15 24 0 40C-15 24 -13 6 0 0Z'/%3E%3Cpath d='M-10 12Q0 19 10 12M-12 23Q0 31 12 23M-8 33Q0 38 8 33'/%3E%3Cpath d='M0 0L4-9'/%3E%3C/g%3E%3Cg transform='translate(24 120) rotate(-25)'%3E%3Cpath d='M0 0C13 6 15 24 0 40C-15 24 -13 6 0 0Z'/%3E%3Cpath d='M-10 12Q0 19 10 12M-12 23Q0 31 12 23M-8 33Q0 38 8 33'/%3E%3Cpath d='M0 0L4-9'/%3E%3C/g%3E%3C/svg%3E"),
+      radial-gradient(60rem 30rem at 50% -10rem, color-mix(in srgb, var(--color-primary) 10%, transparent), transparent);
+    background-repeat: repeat, no-repeat;
+    background-attachment: fixed, scroll;
+  }
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}

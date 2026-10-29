@@ -1,0 +1,1 @@
+.create-merge table TiltEvents (eventtime: datetime, gravity: real, temp: real)

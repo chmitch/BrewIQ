@@ -1,0 +1,24 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Hourly average fermentation temperature",
+  "width": "container",
+  "height": "container",
+  "mark": { "type": "line", "interpolate": "monotone", "strokeWidth": 2.5, "color": "#c2410c" },
+  "encoding": {
+    "x": {
+      "field": "Hour",
+      "type": "temporal",
+      "axis": { "title": null, "format": "%b %-d, %-I %p", "labelOverlap": true }
+    },
+    "y": {
+      "field": "Temperature",
+      "type": "quantitative",
+      "scale": { "zero": false },
+      "axis": { "title": "Temperature (°F)", "format": ".1f" }
+    },
+    "tooltip": [
+      { "field": "Hour", "type": "temporal", "title": "Time", "format": "%b %-d, %-I:%M %p" },
+      { "field": "Temperature", "type": "quantitative", "title": "Temperature (°F)", "format": ".1f" }
+    ]
+  }
+}

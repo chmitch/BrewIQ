@@ -1,0 +1,50 @@
+id: brewiq
+name: BrewIQ
+version: 1.0.0
+services:
+  connectors:
+    enabled: true
+  auth:
+    enabled: true
+    fabric:
+      enabled: true
+      externalEntraExchange: true
+    password:
+      enabled: false
+    allowedRedirectUris:
+      - http://localhost:5173
+      - http://127.0.0.1:5173
+      - https://crisp-pond-c9e27b9e4c-centralus.webapp.fabricapps.net
+  data:
+    enabled: true
+    path: packages/data
+    buildCommand: npm run build
+    dialect: mssql
+  staticHosting:
+    enabled: true
+    path: packages/frontend
+    folder: dist
+    buildCommand: npm run build:fabric
+    indexDocument: index.html
+    assetAccess: protected
+    embedded:
+      only: false
+  storage:
+    enabled: false
+  functions:
+    enabled: true
+    path: "packages/functions"
+    buildCommand: "npm run build"
+    auth:
+      type: "application"
+connectors:
+  - name: brewevents
+    type: fabric-semanticmodel
+    config:
+      workspaceId: 5b675dd3-ccff-4509-af88-6fb38c1cfad1
+      itemId: 082ed118-ece2-4b7a-9703-0c1a23b210d2
+    auth:
+      type: delegated
+    version: "1"
+    operations:
+      - name: executeQuery

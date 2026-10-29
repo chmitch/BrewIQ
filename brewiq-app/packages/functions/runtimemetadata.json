@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "2.0",
+  "functions": [
+    {
+      "functionName": "startImport",
+      "delegateParameters": [
+        {
+          "name": "ctx",
+          "type": "RayfinContext<Record<string, never>, AudienceType.Fabric>",
+          "optional": false,
+          "hasDefault": false,
+          "position": 0,
+          "isFabricParameter": false
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "optional": false,
+          "hasDefault": false,
+          "position": 1,
+          "isFabricParameter": false
+        }
+      ],
+      "contextAudiences": [
+        "Fabric"
+      ]
+    },
+    {
+      "functionName": "readProductPage",
+      "delegateParameters": [
+        {
+          "name": "pageUrl",
+          "type": "string",
+          "optional": false,
+          "hasDefault": false,
+          "position": 0,
+          "isFabricParameter": false
+        }
+      ],
+      "contextAudiences": []
+    },
+    {
+      "functionName": "getImport",
+      "delegateParameters": [
+        {
+          "name": "ctx",
+          "type": "RayfinContext<Record<string, never>, AudienceType.Storage>",
+          "optional": false,
+          "hasDefault": false,
+          "position": 0,
+          "isFabricParameter": false
+        },
+        {
+          "name": "jobId",
+          "type": "string",
+          "optional": false,
+          "hasDefault": false,
+          "position": 1,
+          "isFabricParameter": false
+        }
+      ],
+      "contextAudiences": [
+        "Storage"
+      ]
+    }
+  ]
+}

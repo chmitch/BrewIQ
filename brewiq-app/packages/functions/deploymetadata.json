@@ -1,0 +1,128 @@
+{
+  "runtime": "TypeScript",
+  "functionsMetadata": [
+    {
+      "name": "startImport",
+      "scriptFile": "src\\function_app.ts",
+      "bindings": [
+        {
+          "name": "req",
+          "type": "httpTrigger",
+          "direction": "in",
+          "authLevel": "anonymous",
+          "methods": [
+            "post"
+          ],
+          "route": "startImport"
+        },
+        {
+          "name": "$return",
+          "type": "http",
+          "direction": "out"
+        },
+        {
+          "name": "__generic_Fabric",
+          "direction": "in",
+          "type": "FabricItem",
+          "alias": "",
+          "audienceType": "Fabric"
+        }
+      ],
+      "fabricProperties": {
+        "fabricMetadataSchemaVersion": "1.0",
+        "fabricFunctionReturnType": "Promise<StartImportResult>",
+        "fabricFunctionParameters": [
+          {
+            "name": "ctx",
+            "dataType": "RayfinContext<Record<string, never>, AudienceType.Fabric>",
+            "hasDefaultValue": false
+          },
+          {
+            "name": "url",
+            "dataType": "string",
+            "hasDefaultValue": false
+          }
+        ]
+      },
+      "functionCode": "udf.func(\n  'startImport',\n  async (\n    ctx: RayfinContext<Record<string, never>, AudienceType.Fabric>,\n    url: string,\n  ): Promise<StartImportResult> => {\n    let parsed: URL;\n    try {\n      parsed = new URL(url);\n    } catch {\n      return { ok: false, message: 'Enter a valid URL.' };\n    }\n    if (parsed.protocol !== 'https:' || url.length > MAX_URL_LENGTH) {\n      return { ok: false, message: 'Only https URLs are supported.' };\n    }\n\n    const jobId = randomUUID();\n    const res = await fetch(\n      `${FABRIC_API}/workspaces/${WORKSPACE_ID}/items/${NOTEBOOK_ID}/jobs/instances?jobType=RunNotebook`,\n      {\n        method: 'POST',\n        headers: {\n          Authorization: `Bearer ${ctx.Tokens.Fabric}`,\n          'Content-Type': 'application/json',\n        },\n        body: JSON.stringify({\n          executionData: {\n            parameters: {\n              url: { value: parsed.toString(), type: 'string' },\n              job_id: { value: jobId, type: 'string' },\n            },\n          },\n        }),\n      },\n    );\n    if (!res.ok) {\n      return {\n        ok: false,\n        message: `Could not start the import (Fabric returned ${res.status}).`,\n      };\n    }\n    return { ok: true, jobId };\n  },\n  [],\n)"
+    },
+    {
+      "name": "readProductPage",
+      "scriptFile": "src\\function_app.ts",
+      "bindings": [
+        {
+          "name": "req",
+          "type": "httpTrigger",
+          "direction": "in",
+          "authLevel": "anonymous",
+          "methods": [
+            "post"
+          ],
+          "route": "readProductPage"
+        },
+        {
+          "name": "$return",
+          "type": "http",
+          "direction": "out"
+        }
+      ],
+      "fabricProperties": {
+        "fabricMetadataSchemaVersion": "1.0",
+        "fabricFunctionReturnType": "Promise<ProductImageResult>",
+        "fabricFunctionParameters": [
+          {
+            "name": "pageUrl",
+            "dataType": "string",
+            "hasDefaultValue": false
+          }
+        ]
+      },
+      "functionCode": "udf.func(\n  'readProductPage',\n  async (pageUrl: string): Promise<ProductImageResult> => {\n    let page: URL;\n    try {\n      page = new URL(pageUrl);\n    } catch {\n      return { ok: false, message: 'Enter a valid URL.' };\n    }\n    const host = page.hostname.toLowerCase();\n    if (\n      page.protocol !== 'https:' ||\n      pageUrl.length > MAX_URL_LENGTH ||\n      !PAGE_HOSTS.some((h) => host === h || host.endsWith(`.${h}`))\n    ) {\n      return { ok: false, message: 'Only northernbrewer.com product pages are supported.' };\n    }\n    let html: string;\n    try {\n      const res = await fetch(page, {\n        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; BrewIQ)', Accept: 'text/html' },\n        signal: AbortSignal.timeout(15000),\n      });\n      if (!res.ok) {\n        return { ok: false, message: `The page returned ${res.status}.` };\n      }\n      html = (await res.text()).slice(0, 4_000_000);\n    } catch {\n      return { ok: false, message: 'Could not load the page.' };\n    }\n    let imageUrl: string | null = null;\n    for (const re of OG_IMAGE) {\n      const raw = re.exec(html)?.[1];\n      if (!raw) continue;\n      try {\n        const img = new URL(raw.replace(/&amp;/g, '&'), page);\n        if (img.protocol === 'https:' && img.toString().length <= 600) {\n          imageUrl = img.toString();\n          break;\n        }\n      } catch {\n        // try the next pattern\n      }\n    }\n\n    if (!imageUrl && /\\/products\\/[^/]+$/.test(page.pathname)) {\n      try {\n        const res = await fetch(`${page.origin}${page.pathname}.js`, {\n          headers: { 'User-Agent': 'Mozilla/5.0 (compatible; BrewIQ)' },\n          signal: AbortSignal.timeout(15000),\n        });\n        if (res.ok) {\n          const featured = ((await res.json()) as { featured_image?: string }).featured_image;\n          if (featured) {\n            const img = new URL(featured, page);\n            if (img.protocol === 'https:' && img.toString().length <= 600) {\n              imageUrl = img.toString();\n            }\n          }\n        }\n      } catch {\n        // the page itself may still give a PDF\n      }\n    }\n\n    const pdfs: string[] = [];\n    const flat = html.replace(/\\\\\\//g, '/');\n    for (const m of flat.matchAll(/(?:https?:)?\\/\\/[^\"'\\s<>()\\\\]+?\\.pdf(?:\\?[^\"'\\s<>()\\\\]*)?/gi)) {\n      try {\n        const link = new URL(m[0].replace(/&amp;/g, '&'), page);\n        if (link.protocol === 'https:' && link.toString().length <= MAX_URL_LENGTH) {\n          pdfs.push(link.toString());\n        }\n      } catch {\n        // skip malformed links\n      }\n    }\n    for (const m of flat.matchAll(/href=[\"']([^\"']+?\\.pdf(?:\\?[^\"']*)?)[\"']/gi)) {\n      try {\n        const link = new URL(m[1].replace(/&amp;/g, '&'), page);\n        if (link.protocol === 'https:' && link.toString().length <= MAX_URL_LENGTH) {\n          pdfs.push(link.toString());\n        }\n      } catch {\n        // skip malformed links\n      }\n    }\n    const pdfUrl = pdfs.find((p) => /instruction|recipe/i.test(p)) ?? pdfs[0] ?? null;\n\n    if (!imageUrl && !pdfUrl) {\n      return { ok: false, message: 'No product image or recipe PDF found on that page.' };\n    }\n    return { ok: true, imageUrl, pdfUrl };\n  },\n  [],\n)"
+    },
+    {
+      "name": "getImport",
+      "scriptFile": "src\\function_app.ts",
+      "bindings": [
+        {
+          "name": "req",
+          "type": "httpTrigger",
+          "direction": "in",
+          "authLevel": "anonymous",
+          "methods": [
+            "post"
+          ],
+          "route": "getImport"
+        },
+        {
+          "name": "$return",
+          "type": "http",
+          "direction": "out"
+        },
+        {
+          "name": "__generic_Storage",
+          "direction": "in",
+          "type": "FabricItem",
+          "alias": "",
+          "audienceType": "Storage"
+        }
+      ],
+      "fabricProperties": {
+        "fabricMetadataSchemaVersion": "1.0",
+        "fabricFunctionReturnType": "Promise<ImportStatus>",
+        "fabricFunctionParameters": [
+          {
+            "name": "ctx",
+            "dataType": "RayfinContext<Record<string, never>, AudienceType.Storage>",
+            "hasDefaultValue": false
+          },
+          {
+            "name": "jobId",
+            "dataType": "string",
+            "hasDefaultValue": false
+          }
+        ]
+      },
+      "functionCode": "udf.func(\n  'getImport',\n  async (\n    ctx: RayfinContext<Record<string, never>, AudienceType.Storage>,\n    jobId: string,\n  ): Promise<ImportStatus> => {\n    if (!JOB_ID_PATTERN.test(jobId)) {\n      return { status: 'error', error: 'Invalid job id.' };\n    }\n    const res = await fetch(\n      `${ONELAKE}/${WORKSPACE_ID}/${LAKEHOUSE_ID}/Files/import/${jobId}.json`,\n      { headers: { Authorization: `Bearer ${ctx.Tokens.Storage}` } },\n    );\n    if (res.status === 404) return { status: 'running' };\n    if (!res.ok) {\n      return { status: 'error', error: `Result read failed (${res.status}).` };\n    }\n    const body = (await res.json()) as {\n      status?: string;\n      recipe?: unknown;\n      error?: string;\n    };\n    if (body.status === 'ok' && body.recipe) {\n      return { status: 'ok', recipeJson: JSON.stringify(body.recipe) };\n    }\n    return {\n      status: 'error',\n      error: String(body.error ?? 'Import failed.').slice(0, 500),\n    };\n  },\n  [],\n)"
+    }
+  ]
+}

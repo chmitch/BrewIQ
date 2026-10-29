@@ -1,0 +1,22 @@
+DEFINE
+  VAR Readings =
+    FILTER(
+      BrewEvents,
+      BrewEvents[gravity] >= 1
+        && BrewEvents[eventtime] >= __FROM__
+        && BrewEvents[eventtime] <= __TO__
+    )
+  VAR FirstTime = MINX(Readings, BrewEvents[eventtime])
+  VAR LastTime = MAXX(Readings, BrewEvents[eventtime])
+EVALUATE
+  ROW(
+    "FirstTime", FirstTime,
+    "FirstGravity", MAXX(FILTER(Readings, BrewEvents[eventtime] = FirstTime), BrewEvents[gravity]),
+    "LastTime", LastTime,
+    "LastGravity", MAXX(FILTER(Readings, BrewEvents[eventtime] = LastTime), BrewEvents[gravity]),
+    "LastTemperature", MAXX(FILTER(Readings, BrewEvents[eventtime] = LastTime), BrewEvents[temp]),
+    "MinTemperature", MINX(Readings, BrewEvents[temp]),
+    "MaxTemperature", MAXX(Readings, BrewEvents[temp]),
+    "AvgTemperature", AVERAGEX(Readings, BrewEvents[temp]),
+    "Readings", COUNTROWS(Readings)
+  )

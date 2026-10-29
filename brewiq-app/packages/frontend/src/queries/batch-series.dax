@@ -1,0 +1,21 @@
+DEFINE
+  VAR Readings =
+    ADDCOLUMNS(
+      FILTER(
+        BrewEvents,
+        BrewEvents[gravity] >= 1
+          && BrewEvents[eventtime] >= __FROM__
+          && BrewEvents[eventtime] <= __TO__
+      ),
+      "Hour",
+        DATE(YEAR(BrewEvents[eventtime]), MONTH(BrewEvents[eventtime]), DAY(BrewEvents[eventtime]))
+          + TIME(HOUR(BrewEvents[eventtime]), 0, 0)
+    )
+EVALUATE
+  GROUPBY(
+    Readings,
+    [Hour],
+    "Gravity", AVERAGEX(CURRENTGROUP(), BrewEvents[gravity]),
+    "Temperature", AVERAGEX(CURRENTGROUP(), BrewEvents[temp])
+  )
+ORDER BY [Hour]

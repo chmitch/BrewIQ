@@ -1,0 +1,75 @@
+{
+  "sources": [
+    {
+      "id": "2f651a19-9b02-41bc-9638-1f37efcb2229",
+      "name": "AzureIoTHub",
+      "type": "AzureIoTHub",
+      "properties": {
+        "dataConnectionId": "{{CONNECTION_ID}}",
+        "consumerGroupName": "{{CONSUMER_GROUP}}",
+        "inputSerialization": { "type": "Json", "properties": { "encoding": "UTF8" } }
+      }
+    }
+  ],
+  "destinations": [
+    {
+      "id": "2c33a3f4-dcb2-426c-bcef-33cf324be581",
+      "name": "{{EVENTHOUSE}}",
+      "type": "Eventhouse",
+      "properties": {
+        "dataIngestionMode": "ProcessedIngestion",
+        "workspaceId": "{{WORKSPACE_ID}}",
+        "itemId": "{{KQL_DATABASE_ID}}",
+        "databaseName": "{{EVENTHOUSE}}",
+        "tableName": "{{KQL_TABLE}}",
+        "inputSerialization": { "type": "Json", "properties": { "encoding": "UTF8" } }
+      },
+      "inputNodes": [{ "name": "TypeConversion" }]
+    }
+  ],
+  "streams": [
+    {
+      "id": "1bc6d636-5b86-414a-9cb6-f250c570ec68",
+      "name": "{{EVENTSTREAM}}-stream",
+      "type": "DefaultStream",
+      "properties": {},
+      "inputNodes": [{ "name": "AzureIoTHub" }]
+    }
+  ],
+  "operators": [
+    {
+      "name": "TypeConversion",
+      "type": "ManageFields",
+      "inputNodes": [{ "name": "{{EVENTSTREAM}}-stream" }],
+      "properties": {
+        "columns": [
+          {
+            "type": "Cast",
+            "properties": {
+              "targetDataType": "DateTime",
+              "column": { "expressionType": "ColumnReference", "node": null, "columnName": "eventtime", "columnPathSegments": null }
+            },
+            "alias": "eventtime"
+          },
+          {
+            "type": "Cast",
+            "properties": {
+              "targetDataType": "Float",
+              "column": { "expressionType": "ColumnReference", "node": null, "columnName": "gravity", "columnPathSegments": null }
+            },
+            "alias": "gravity"
+          },
+          {
+            "type": "Cast",
+            "properties": {
+              "targetDataType": "Float",
+              "column": { "expressionType": "ColumnReference", "node": null, "columnName": "temp", "columnPathSegments": null }
+            },
+            "alias": "temp"
+          }
+        ]
+      }
+    }
+  ],
+  "compatibilityLevel": "1.0"
+}

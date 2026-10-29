@@ -1,0 +1,20 @@
+{
+  "prefix": "cgm",
+  "resourceGroup": "brewiq",
+  "location": "centralus",
+  "capacity": { "name": "brewiq", "sku": "F4", "admin": "you@example.com" },
+  "iotHub": {
+    "name": "brewiq-iothub",
+    "sku": "F1",
+    "device": "tiltsim",
+    "consumerGroup": "tiltstreaming",
+    "servicePolicy": "service"
+  },
+  "workspace": "BrewIQ",
+  "lakehouse": "BrewIQLakehouse",
+  "eventhouse": "BrewIQEventhouse",
+  "kqlTable": "TiltEvents",
+  "eventstream": "BrewIQEventStream",
+  "semanticModel": "BrewEvents",
+  "notebooks": { "simulator": "TiltEvent-Simulator", "recipeImport": "RecipeImport" }
+}

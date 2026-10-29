@@ -1,0 +1,1241 @@
+[
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1007",
+  "name": "German Ale",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low",
+  "attenuation": "73 - 77%",
+  "abv": "11%",
+  "temp": "55-68\u00b0F (13-20\u00b0C)",
+  "url": "https://wyeastlab.com/product/german-ale/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1010",
+  "name": "American Wheat",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low",
+  "attenuation": "74 - 78%",
+  "abv": "10%",
+  "temp": "58-74\u00b0F (14-23\u00b0C)",
+  "url": "https://wyeastlab.com/product/american-wheat/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1026-PC",
+  "name": "British Cask Ale",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium High",
+  "attenuation": "74 - 77%",
+  "abv": "9%",
+  "temp": "63-72\u00b0F (17-22\u00b0C)",
+  "url": "https://wyeastlab.com/product/british-cask-ale/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1028",
+  "name": "London Ale",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low Medium",
+  "attenuation": "73 - 77%",
+  "abv": "11%",
+  "temp": "60-72\u00b0F (16-22\u00b0C)",
+  "url": "https://wyeastlab.com/product/london-ale/"
+ },
+ {
+  "cats": [
+   "Beer",
+   "Mead"
+  ],
+  "code": "1056",
+  "name": "American Ale\u00ae",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low Medium",
+  "attenuation": "73 - 77%",
+  "abv": "11%",
+  "temp": "60-72\u00b0F (16-22\u00b0C)",
+  "url": "https://wyeastlab.com/product/american-ale/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1084",
+  "name": "Irish Ale",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium",
+  "attenuation": "71 - 75%",
+  "abv": "12%",
+  "temp": "62-72\u00b0F (17-22\u00b0C)",
+  "url": "https://wyeastlab.com/product/irish-ale/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1087-PC",
+  "name": "Wyeast Bohemian Ale Blend",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium High",
+  "attenuation": "71 - 75%",
+  "abv": "11%",
+  "temp": "64-72\u00b0F (18-22\u00b0C)",
+  "url": "https://wyeastlab.com/product/wyeast-bohemian-ale-blend/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1098",
+  "name": "British Ale",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium",
+  "attenuation": "73 - 75%",
+  "abv": "10%",
+  "temp": "64-72\u00b0F (18-22\u00b0C)",
+  "url": "https://wyeastlab.com/product/british-ale/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1099",
+  "name": "Whitbread Ale",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium High",
+  "attenuation": "68 - 72%",
+  "abv": "10%",
+  "temp": "64-75\u00b0F (18-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/whitbread-ale/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1187",
+  "name": "Ringwood Ale",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "High",
+  "attenuation": "68 - 72%",
+  "abv": "10%",
+  "temp": "64-74\u00b0F (18-23\u00b0C)",
+  "url": "https://wyeastlab.com/product/ringwood-ale/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1203-PC",
+  "name": "Burton IPA Blend",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium High",
+  "attenuation": "71 - 74%",
+  "abv": "10%",
+  "temp": "64-74\u00b0F (18-23\u00b0C)",
+  "url": "https://wyeastlab.com/product/burton-ipa-blend/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1214",
+  "name": "Belgian Abbey Style Ale",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low Medium",
+  "attenuation": "74 - 78%",
+  "abv": "12%",
+  "temp": "68-78\u00b0F (20-26\u00b0C)",
+  "url": "https://wyeastlab.com/product/belgian-abbey-style-ale/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1217-PC",
+  "name": "West Coast IPA",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium High",
+  "attenuation": "73 - 80%",
+  "abv": "10%",
+  "temp": "62-74\u00b0F (17-23\u00b0C)",
+  "url": "https://wyeastlab.com/product/west-coast-ipa/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1272",
+  "name": "American Ale II",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium High",
+  "attenuation": "72 - 76%",
+  "abv": "10%",
+  "temp": "60-72\u00b0F (16-22\u00b0C)",
+  "url": "https://wyeastlab.com/product/american-ale-ii/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1275",
+  "name": "Thames Valley Ale",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low Medium",
+  "attenuation": "77%",
+  "abv": "10%",
+  "temp": "62-72\u00b0F (17-22\u00b0C)",
+  "url": "https://wyeastlab.com/product/thames-valley-ale/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1318",
+  "name": "London Ale III",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "High",
+  "attenuation": "71 - 75%",
+  "abv": "10%",
+  "temp": "64-74\u00b0F (18-23\u00b0C)",
+  "url": "https://wyeastlab.com/product/london-ale-iii/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1332",
+  "name": "Northwest Ale",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "High",
+  "attenuation": "67 - 71%",
+  "abv": "10%",
+  "temp": "65-75\u00b0F (18-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/northwest-ale/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1335",
+  "name": "British Ale II",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "High",
+  "attenuation": "73 - 76%",
+  "abv": "10%",
+  "temp": "63-75\u00b0F (17-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/british-ale-ii/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1388",
+  "name": "Belgian Strong Ale",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low",
+  "attenuation": "74 - 78%",
+  "abv": "12 - 13%",
+  "temp": "64-80\u00b0F (18-27\u00b0C)",
+  "url": "https://wyeastlab.com/product/belgian-strong-ale/"
+ },
+ {
+  "cats": [
+   "Mead",
+   "Beer"
+  ],
+  "code": "1450",
+  "name": "Denny's Favorite 50",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low",
+  "attenuation": "74 - 76%",
+  "abv": "10%",
+  "temp": "60-70\u00b0F (16-21\u00b0C)",
+  "url": "https://wyeastlab.com/product/dennys-favorite-50/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1469",
+  "name": "West Yorkshire Ale",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "High",
+  "attenuation": "67 - 71%",
+  "abv": "9%",
+  "temp": "64-72\u00b0F (18-22\u00b0C)",
+  "url": "https://wyeastlab.com/product/west-yorkshire-ale/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1581-PC",
+  "name": "Belgian Stout",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium",
+  "attenuation": "70 - 85%",
+  "abv": "12%",
+  "temp": "65-75\u00b0F (18-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/belgian-stout/"
+ },
+ {
+  "cats": [
+   "Mead",
+   "Beer"
+  ],
+  "code": "1728",
+  "name": "Scottish Ale",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "High",
+  "attenuation": "69 - 73%",
+  "abv": "12%",
+  "temp": "55-75\u00b0F (13-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/scottish-ale/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1762",
+  "name": "Belgian Abbey Style Ale II",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium",
+  "attenuation": "73 - 77%",
+  "abv": "12%",
+  "temp": "65-75\u00b0F (18-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/belgian-abbey-style-ale-ii/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1768-PC",
+  "name": "English Special Bitter",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "High",
+  "attenuation": "68 - 72%",
+  "abv": "9%",
+  "temp": "64-72\u00b0F (18-22\u00b0C)",
+  "url": "https://wyeastlab.com/product/english-special-bitter/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1882-PC",
+  "name": "Thames Valley Ale II",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "High",
+  "attenuation": "72 - 78%",
+  "abv": "10%",
+  "temp": "60-70\u00b0F (16-21\u00b0C)",
+  "url": "https://wyeastlab.com/product/thames-valley-ale-ii/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "1968",
+  "name": "London ESB Ale",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "High",
+  "attenuation": "67 - 71%",
+  "abv": "9%",
+  "temp": "64-72\u00b0F (18-22\u00b0C)",
+  "url": "https://wyeastlab.com/product/london-esb-ale/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "2000-PC",
+  "name": "Budvar Lager",
+  "species": "Saccharomyces pastorianus",
+  "flocculation": "Medium High",
+  "attenuation": "71 - 75%",
+  "abv": "9%",
+  "temp": "48-56\u00b0F (9-13\u00b0C)",
+  "url": "https://wyeastlab.com/product/budvar-lager/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "2001-PC",
+  "name": "Pilsner Urquell H-Strain",
+  "species": "Saccharomyces pastorianus",
+  "flocculation": "Medium High",
+  "attenuation": "72 - 76%",
+  "abv": "9%",
+  "temp": "48-56\u00b0F (9-13\u00b0C)",
+  "url": "https://wyeastlab.com/product/pilsner-urquell-h-strain/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "2002-PC",
+  "name": "Gambrinus Style Lager",
+  "species": "Saccharomyces pastorianus",
+  "flocculation": "Medium High",
+  "attenuation": "71 - 75%",
+  "abv": "9%",
+  "temp": "46-56\u00b0F (8-13\u00b0C)",
+  "url": "https://wyeastlab.com/product/gambrinus-style-lager/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "2007",
+  "name": "Pilsen Lager",
+  "species": "Saccharomyces pastorianus",
+  "flocculation": "Medium",
+  "attenuation": "71 - 75%",
+  "abv": "9%",
+  "temp": "48-56\u00b0F (9-13\u00b0C)",
+  "url": "https://wyeastlab.com/product/pilsen-lager/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "2035-PC",
+  "name": "American Lager",
+  "species": "Saccharomyces pastorianus",
+  "flocculation": "Medium",
+  "attenuation": "73 - 77%",
+  "abv": "9%",
+  "temp": "48-58\u00b0F (9-14\u00b0C)",
+  "url": "https://wyeastlab.com/product/american-lager/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "2042-PC",
+  "name": "Danish Lager",
+  "species": "Saccharomyces pastorianus",
+  "flocculation": "Low",
+  "attenuation": "73 - 77%",
+  "abv": "9%",
+  "temp": "46-56\u00b0F (8-13\u00b0C)",
+  "url": "https://wyeastlab.com/product/danish-lager/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "2105-PC",
+  "name": "Rocky Mountain Lager",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium High",
+  "attenuation": "70 - 74%",
+  "abv": "9%",
+  "temp": "48-56\u00b0F (9-13\u00b0C)",
+  "url": "https://wyeastlab.com/product/rocky-mountain-lager/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "2112",
+  "name": "California Lager",
+  "species": "Saccharomyces pastorianus",
+  "flocculation": "High",
+  "attenuation": "67 - 71%",
+  "abv": "9%",
+  "temp": "58-68\u00b0F (14-20\u00b0C)",
+  "url": "https://wyeastlab.com/product/california-lager/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "2124",
+  "name": "Bohemian Lager",
+  "species": "Saccharomyces pastorianus",
+  "flocculation": "Low Medium",
+  "attenuation": "73 - 77%",
+  "abv": "9%",
+  "temp": "45-68\u00b0F (7-20\u00b0C)",
+  "url": "https://wyeastlab.com/product/bohemian-lager/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "2206",
+  "name": "Bavarian Lager",
+  "species": "Saccharomyces pastorianus",
+  "flocculation": "Medium High",
+  "attenuation": "73 - 77%",
+  "abv": "9%",
+  "temp": "46-58\u00b0F (8-14\u00b0C)",
+  "url": "https://wyeastlab.com/product/bavarian-lager/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "2247-PC",
+  "name": "European Lager",
+  "species": "Saccharomyces pastorianus",
+  "flocculation": "Low",
+  "attenuation": "73 - 77%",
+  "abv": "10%",
+  "temp": "46-56\u00b0F (8-13\u00b0C)",
+  "url": "https://wyeastlab.com/product/european-lager/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "2272-PC",
+  "name": "North American Lager",
+  "species": "Saccharomyces pastorianus",
+  "flocculation": "High",
+  "attenuation": "70 - 76%",
+  "abv": "9%",
+  "temp": "52-58\u00b0F (11-14\u00b0C)",
+  "url": "https://wyeastlab.com/product/north-american-lager/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "2278",
+  "name": "Czech Pils",
+  "species": "Saccharomyces pastorianus",
+  "flocculation": "Medium High",
+  "attenuation": "70 - 74%",
+  "abv": "9%",
+  "temp": "50-58\u00b0F (10-14\u00b0C)",
+  "url": "https://wyeastlab.com/product/czech-pils/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "2308",
+  "name": "Munich Lager",
+  "species": "Saccharomyces pastorianus",
+  "flocculation": "Medium",
+  "attenuation": "70 - 74%",
+  "abv": "9%",
+  "temp": "48-56\u00b0F (9-13\u00b0C)",
+  "url": "https://wyeastlab.com/product/munich-lager/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "2352-PC",
+  "name": "Munich Lager II",
+  "species": "Saccharomyces pastorianus",
+  "flocculation": "Medium",
+  "attenuation": "72 - 74%",
+  "abv": "10%",
+  "temp": "52-62\u00b0F (11-17\u00b0C)",
+  "url": "https://wyeastlab.com/product/munich-lager-ii/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "2487-PC",
+  "name": "Hella Bock Lager",
+  "species": "Saccharomyces pastorianus",
+  "flocculation": "Medium",
+  "attenuation": "70 - 74%",
+  "abv": "12%",
+  "temp": "48-56\u00b0F (9-13\u00b0C)",
+  "url": "https://wyeastlab.com/product/hella-bock-lager/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "2565",
+  "name": "K\u00f6lsch",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low",
+  "attenuation": "73 - 77%",
+  "abv": "10%",
+  "temp": "56-70\u00b0F (13-21\u00b0C)",
+  "url": "https://wyeastlab.com/product/klsch/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "2575-PC",
+  "name": "K\u00f6lsch II",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low",
+  "attenuation": "73 - 77%",
+  "abv": "10%",
+  "temp": "55-70\u00b0F (13-21\u00b0C)",
+  "url": "https://wyeastlab.com/product/klsch-ii/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "2633",
+  "name": "Octoberfest Lager Blend",
+  "species": "Saccharomyces pastorianus",
+  "flocculation": "Low Medium",
+  "attenuation": "73 - 77%",
+  "abv": "9%",
+  "temp": "48-58\u00b0F (9-14\u00b0C)",
+  "url": "https://wyeastlab.com/product/octoberfest-lager-blend/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "2782-PC",
+  "name": "Staro Prague Lager",
+  "species": "Saccharomyces pastorianus",
+  "flocculation": "High",
+  "attenuation": "70 - 74%",
+  "abv": "11%",
+  "temp": "50-58\u00b0F (10-14\u00b0C)",
+  "url": "https://wyeastlab.com/product/staro-prague-lager/"
+ },
+ {
+  "cats": [
+   "Wild & Sour"
+  ],
+  "code": "3031-PC",
+  "name": "Saison-Brett Blend",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low",
+  "attenuation": "80 - 90%",
+  "abv": "12%",
+  "temp": "65-80\u00b0F (18-27\u00b0C)",
+  "url": "https://wyeastlab.com/product/saison-brett-blend/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "3056",
+  "name": "Bavarian Wheat Blend",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium",
+  "attenuation": "73 - 77%",
+  "abv": "10%",
+  "temp": "64-74\u00b0F (18-23\u00b0C)",
+  "url": "https://wyeastlab.com/product/bavarian-wheat-blend/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "3068",
+  "name": "Weihenstephan Weizen",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low",
+  "attenuation": "73 - 77%",
+  "abv": "10%",
+  "temp": "64-75\u00b0F (18-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/weihenstephan-weizen/"
+ },
+ {
+  "cats": [
+   "Wild & Sour"
+  ],
+  "code": "3191-PC",
+  "name": "Berliner Weisse Blend",
+  "species": "Saccharomyces cerevisiae, Brettanomyces, Lactobacillus",
+  "flocculation": "Low",
+  "attenuation": "73 - 77%",
+  "abv": "6%",
+  "temp": "68-72\u00b0F (20-22\u00b0C)",
+  "url": "https://wyeastlab.com/product/berliner-weisse-blend/"
+ },
+ {
+  "cats": [
+   "Wild & Sour"
+  ],
+  "code": "3209-PC",
+  "name": "Oud Bruin Ale Blend",
+  "species": "Saccharomyces cerevisiae, Lactobacillus",
+  "flocculation": "Low - High",
+  "attenuation": "70 - 80%",
+  "abv": "10%",
+  "temp": "80-85\u00b0F (27-29\u00b0C)",
+  "url": "https://wyeastlab.com/product/oud-bruin-ale-blend/"
+ },
+ {
+  "cats": [
+   "Wild & Sour"
+  ],
+  "code": "3278",
+  "name": "Belgian Lambic Blend",
+  "species": "Saccharomyces cerevisiae, Brettanomyces, Lactobacillus, Pediococcus",
+  "flocculation": "Low - High",
+  "attenuation": "70 - 80%",
+  "abv": "11%",
+  "temp": "63-75\u00b0F (17-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/belgian-lambic-blend/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "3333-PC",
+  "name": "German Wheat",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "High",
+  "attenuation": "70 - 76%",
+  "abv": "10%",
+  "temp": "63-75\u00b0F (17-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/german-wheat/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "3463-PC",
+  "name": "Forbidden Fruit",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low",
+  "attenuation": "72 - 76%",
+  "abv": "12%",
+  "temp": "63-76\u00b0F (17-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/forbidden-fruit/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "3522",
+  "name": "Belgian Ardennes",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "High",
+  "attenuation": "72 - 76%",
+  "abv": "12%",
+  "temp": "65-76\u00b0F (18-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/belgian-ardennes/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "3638",
+  "name": "Bavarian Wheat",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low",
+  "attenuation": "70 - 76%",
+  "abv": "10%",
+  "temp": "64-75\u00b0F (18-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/bavarian-wheat/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "3655-PC",
+  "name": "Belgian Schelde Ale",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium",
+  "attenuation": "73 - 77%",
+  "abv": "11%",
+  "temp": "62-74\u00b0F (17-23\u00b0C)",
+  "url": "https://wyeastlab.com/product/belgian-schelde-ale/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "3711",
+  "name": "French Saison",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low",
+  "attenuation": "77 - 83%",
+  "abv": "12%",
+  "temp": "65-77\u00b0F (18-25\u00b0C)",
+  "url": "https://wyeastlab.com/product/french-saison/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "3724",
+  "name": "Belgian Saison",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low",
+  "attenuation": "76 - 80%",
+  "abv": "12%",
+  "temp": "70-95\u00b0F (21-35\u00b0C)",
+  "url": "https://wyeastlab.com/product/belgian-saison/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "3725-PC",
+  "name": "Bi\u00e8re de Garde",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low",
+  "attenuation": "74 - 79%",
+  "abv": "12%",
+  "temp": "70-84\u00b0F (21-29\u00b0C)",
+  "url": "https://wyeastlab.com/product/bire-de-garde/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "3726",
+  "name": "Farmhouse Ale",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium",
+  "attenuation": "74 - 79%",
+  "abv": "12%",
+  "temp": "70-84\u00b0F (21-29\u00b0C)",
+  "url": "https://wyeastlab.com/product/farmhouse-ale/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "3739-PC",
+  "name": "Flanders Golden Ale",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low Medium",
+  "attenuation": "74 - 78%",
+  "abv": "12%",
+  "temp": "64-80\u00b0F (18-27\u00b0C)",
+  "url": "https://wyeastlab.com/product/flanders-golden-ale/"
+ },
+ {
+  "cats": [
+   "Wild & Sour"
+  ],
+  "code": "3763",
+  "name": "Roeselare Ale Blend",
+  "species": "Saccharomyces cerevisiae, Brettanomyces, Lactobacillus, Pediococcus",
+  "flocculation": "Low - High",
+  "attenuation": "80%",
+  "abv": "11%",
+  "temp": "65-85\u00b0F (18-29\u00b0C)",
+  "url": "https://wyeastlab.com/product/roeselare-ale-blend/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "3787",
+  "name": "Belgian High Gravity",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium",
+  "attenuation": "74 - 78%",
+  "abv": "11 - 12%",
+  "temp": "64-78\u00b0F (18-26\u00b0C)",
+  "url": "https://wyeastlab.com/product/belgian-high-gravity/"
+ },
+ {
+  "cats": [
+   "Wild & Sour"
+  ],
+  "code": "3789-PC",
+  "name": "Belgian Style Blend",
+  "species": "Saccharomyces cerevisiae, Brettanomyces",
+  "flocculation": "Medium",
+  "attenuation": "75 - 80%",
+  "abv": "12%",
+  "temp": "68-85\u00b0F (20-29\u00b0C)",
+  "url": "https://wyeastlab.com/product/belgian-style-blend/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "3822-PC",
+  "name": "Belgian Dark Ale",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium",
+  "attenuation": "74 - 79%",
+  "abv": "12%",
+  "temp": "65-80\u00b0F (18-27\u00b0C)",
+  "url": "https://wyeastlab.com/product/belgian-dark-ale/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "3864-PC",
+  "name": "Canadian/Belgian Ale",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium",
+  "attenuation": "75 - 79%",
+  "abv": "12%",
+  "temp": "65-80\u00b0F (18-27\u00b0C)",
+  "url": "https://wyeastlab.com/product/canadianbelgian-ale/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "3942-PC",
+  "name": "Belgian Wheat",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium",
+  "attenuation": "72 - 76%",
+  "abv": "12%",
+  "temp": "64-74\u00b0F (18-23\u00b0C)",
+  "url": "https://wyeastlab.com/product/belgian-wheat/"
+ },
+ {
+  "cats": [
+   "Beer"
+  ],
+  "code": "3944",
+  "name": "Belgian Witbier",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium",
+  "attenuation": "72 - 76%",
+  "abv": "11 - 12%",
+  "temp": "62-75\u00b0F (17-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/belgian-witbier/"
+ },
+ {
+  "cats": [
+   "Wine",
+   "Cider",
+   "Mead"
+  ],
+  "code": "4007",
+  "name": "Malolactic Blend",
+  "species": "Oenococcus oeni",
+  "flocculation": "Low - High",
+  "attenuation": null,
+  "abv": "12 - 18%",
+  "temp": "55-95\u00b0F (13-35\u00b0C)",
+  "url": "https://wyeastlab.com/product/malolactic-blend/"
+ },
+ {
+  "cats": [
+   "Wine",
+   "Cider",
+   "Mead",
+   "Spirits"
+  ],
+  "code": "4021",
+  "name": "Dry White/Sparkling",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium",
+  "attenuation": null,
+  "abv": "17%",
+  "temp": "55-75\u00b0F (13-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/dry-whitesparkling/"
+ },
+ {
+  "cats": [
+   "Wine",
+   "Cider",
+   "Mead",
+   "Spirits"
+  ],
+  "code": "4028",
+  "name": "Red",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low Medium",
+  "attenuation": null,
+  "abv": "14%",
+  "temp": "55-90\u00b0F (13-32\u00b0C)",
+  "url": "https://wyeastlab.com/product/red/"
+ },
+ {
+  "cats": [
+   "Wine"
+  ],
+  "code": "4114",
+  "name": "Er1A Malolactic",
+  "species": "Oenococcus oeni",
+  "flocculation": "Low - High",
+  "attenuation": null,
+  "abv": "12 - 18%",
+  "temp": "70-90\u00b0F (21-32\u00b0C)",
+  "url": "https://wyeastlab.com/product/er1a-malolactic/"
+ },
+ {
+  "cats": [
+   "Sak\u00e9",
+   "Wine"
+  ],
+  "code": "4134",
+  "name": "Sak\u00e9",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low",
+  "attenuation": null,
+  "abv": "14%",
+  "temp": "60-75\u00b0F (16-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/sake/"
+ },
+ {
+  "cats": [
+   "Mead",
+   "Cider",
+   "Sak\u00e9"
+  ],
+  "code": "4184",
+  "name": "Sweet Mead",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium",
+  "attenuation": null,
+  "abv": "11%",
+  "temp": "65-75\u00b0F (18-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/sweet-mead/"
+ },
+ {
+  "cats": [
+   "Wine"
+  ],
+  "code": "4221",
+  "name": "Ey2d Malolactic",
+  "species": "Oenococcus oeni",
+  "flocculation": "Low - High",
+  "attenuation": null,
+  "abv": "12 - 18%",
+  "temp": "55-70\u00b0F (13-21\u00b0C)",
+  "url": "https://wyeastlab.com/product/ey2d-malolactic/"
+ },
+ {
+  "cats": [
+   "Wine",
+   "Cider",
+   "Mead"
+  ],
+  "code": "4242",
+  "name": "Fruity White",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium",
+  "attenuation": null,
+  "abv": "12%",
+  "temp": "55-75\u00b0F (13-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/fruity-white/"
+ },
+ {
+  "cats": [
+   "Wine",
+   "Cider",
+   "Mead"
+  ],
+  "code": "4244",
+  "name": "Italian Red",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium",
+  "attenuation": null,
+  "abv": "14%",
+  "temp": "55-75\u00b0F (13-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/italian-red/"
+ },
+ {
+  "cats": [
+   "Wine",
+   "Cider",
+   "Mead"
+  ],
+  "code": "4267",
+  "name": "Summation Red",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low Medium",
+  "attenuation": null,
+  "abv": "14%",
+  "temp": "60-90\u00b0F (16-32\u00b0C)",
+  "url": "https://wyeastlab.com/product/summation-red/"
+ },
+ {
+  "cats": [
+   "Spirits"
+  ],
+  "code": "4347",
+  "name": "Extreme Fermentation",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low",
+  "attenuation": null,
+  "abv": "21%",
+  "temp": "65-80\u00b0F (18-27\u00b0C)",
+  "url": "https://wyeastlab.com/product/extreme-fermentation/"
+ },
+ {
+  "cats": [
+   "Mead"
+  ],
+  "code": "4632",
+  "name": "Dry Mead",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low Medium",
+  "attenuation": null,
+  "abv": "18%",
+  "temp": "55-75\u00b0F (13-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/dry-mead/"
+ },
+ {
+  "cats": [
+   "Cider",
+   "Mead"
+  ],
+  "code": "4766",
+  "name": "Cider",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low",
+  "attenuation": null,
+  "abv": "12%",
+  "temp": "60-75\u00b0F (16-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/cider/"
+ },
+ {
+  "cats": [
+   "Wine",
+   "Cider",
+   "Spirits"
+  ],
+  "code": "4767",
+  "name": "Dry/Fortified",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low Medium",
+  "attenuation": null,
+  "abv": "14%",
+  "temp": "60-90\u00b0F (16-32\u00b0C)",
+  "url": "https://wyeastlab.com/product/dryfortified/"
+ },
+ {
+  "cats": [
+   "Wine",
+   "Cider",
+   "Mead",
+   "Spirits",
+   "Sak\u00e9"
+  ],
+  "code": "4783",
+  "name": "Sweet White",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Medium",
+  "attenuation": null,
+  "abv": "14%",
+  "temp": "55-75\u00b0F (13-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/sweet-white/"
+ },
+ {
+  "cats": [
+   "Wine",
+   "Cider",
+   "Mead",
+   "Spirits"
+  ],
+  "code": "4946",
+  "name": "Bold Red/High Alcohol",
+  "species": "Saccharomyces cerevisiae",
+  "flocculation": "Low Medium",
+  "attenuation": null,
+  "abv": "18%",
+  "temp": "60-85\u00b0F (16-29\u00b0C)",
+  "url": "https://wyeastlab.com/product/bold-redhigh-alcohol/"
+ },
+ {
+  "cats": [
+   "Wild & Sour"
+  ],
+  "code": "5112",
+  "name": "Brettanomyces bruxellensis",
+  "species": "Brettanomyces bruxellensis",
+  "flocculation": "Medium",
+  "attenuation": "78 - 84%",
+  "abv": "12%",
+  "temp": "60-75\u00b0F (16-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/brettanomyces-bruxellensis/"
+ },
+ {
+  "cats": [
+   "Wild & Sour"
+  ],
+  "code": "5151-PC",
+  "name": "Brettanomyces claussenii",
+  "species": "Brettanomyces claussenii",
+  "flocculation": "Medium",
+  "attenuation": "80%",
+  "abv": "12%",
+  "temp": "60-75\u00b0F (16-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/brettanomyces-claussenii/"
+ },
+ {
+  "cats": [
+   "Wild & Sour"
+  ],
+  "code": "5223-PC",
+  "name": "Lactobacillus brevis",
+  "species": "Lactobacillus brevis",
+  "flocculation": "Low - High",
+  "attenuation": "70 - 90%",
+  "abv": "9%",
+  "temp": "60-95\u00b0F (16-35\u00b0C)",
+  "url": "https://wyeastlab.com/product/lactobacillus-brevis/"
+ },
+ {
+  "cats": [
+   "Wild & Sour"
+  ],
+  "code": "5335",
+  "name": "Lactobacillus buchneri",
+  "species": "Lactobacillus buchneri",
+  "flocculation": "Low - High",
+  "attenuation": "70 - 90%",
+  "abv": "9%",
+  "temp": "60-95\u00b0F (16-35\u00b0C)",
+  "url": "https://wyeastlab.com/product/lactobacillus-buchneri/"
+ },
+ {
+  "cats": [
+   "Wild & Sour"
+  ],
+  "code": "5526",
+  "name": "Brettanomyces lambicus",
+  "species": "Brettanomyces lambicus",
+  "flocculation": "Medium",
+  "attenuation": "78 - 84%",
+  "abv": "12%",
+  "temp": "60-75\u00b0F (16-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/brettanomyces-lambicus/"
+ },
+ {
+  "cats": [
+   "Wild & Sour"
+  ],
+  "code": "5733",
+  "name": "Pediococcus damnosus",
+  "species": "Pediococcus damnosus",
+  "flocculation": "Low - High",
+  "attenuation": "70 - 90%",
+  "abv": "9%",
+  "temp": "60-95\u00b0F (16-35\u00b0C)",
+  "url": "https://wyeastlab.com/product/pediococcus-damnosus/"
+ },
+ {
+  "cats": [
+   "Wild & Sour"
+  ],
+  "code": "9097-PC",
+  "name": "Old Ale Blend",
+  "species": "Saccharomyces cerevisiae, Brettanomyces",
+  "flocculation": "Medium",
+  "attenuation": "75 - 80%",
+  "abv": "12 - 14%",
+  "temp": "68-75\u00b0F (20-24\u00b0C)",
+  "url": "https://wyeastlab.com/product/old-ale-blend/"
+ }
+]
