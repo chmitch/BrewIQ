@@ -10,6 +10,20 @@ BrewIQ turns that data into something a brewer can act on:
 - **Corrective recommendations** *(planned)*. Anomaly and warning detection for the things that commonly go wrong: temperature outside the yeast's range, a stalled fermentation, or one that has gone far enough and needs a cold crash.
 - **A library of batches and recipes.** Every batch is kept with its recipe, yeast and readings, so you can compare past brews and repeat the good ones. Recipes can be imported from a product page or PDF, and the yeast library carries vendor temperature and attenuation specs.
 
+## What you need
+
+**Required**
+1. **A Tilt hydrometer** ([tilthydrometer.com](https://tilthydrometer.com/)): a floating Bluetooth sensor that reports specific gravity and temperature from inside the fermenter.
+2. **A Raspberry Pi with Bluetooth**: sits within range of the vessel, reads the Tilt's Bluetooth broadcasts and forwards them to Azure IoT Hub as JSON messages (`eventtime`, `gravity`, `temp`).
+3. **A fermentation vessel**: a fermenter large enough for your batch that the Tilt can float in.
+
+**Optional**
+- **A way to control fermentation temperature.** The author uses a small refrigerator with an [Inkbird temperature controller](https://www.inkbird.com/collections/temperature-controllers).
+
+No hardware yet? The `TiltEvent-Simulator` notebook generates realistic Tilt events, so you can run and try the whole solution without a Tilt or a Pi.
+
+> The Pi-side forwarder is not in this repo yet. The simulator sends the same message shape to the same IoT Hub device (`tiltsim`).
+
 ## How it's built
 
 Built on Azure and Microsoft Fabric. A Tilt hydrometer (or the included simulator) sends gravity and temperature to IoT Hub; an eventstream lands the events in an Eventhouse; a Power BI semantic model exposes them to a Rayfin (Fabric Apps) web app that manages batches, recipes and yeasts.
