@@ -1,6 +1,18 @@
 # BrewIQ
 
-Homebrew fermentation analytics on Azure and Microsoft Fabric. A Tilt hydrometer (or the included simulator) sends gravity and temperature to IoT Hub; an eventstream lands the events in an Eventhouse; a Power BI semantic model exposes them to a Rayfin (Fabric Apps) web app that manages batches, recipes and yeasts.
+**Take the guesswork out of small-batch fermentation.**
+
+For most hobbyist beer, wine and cider makers, fermentation is a "cross your fingers and hope for the best" step. You pitch the yeast, put the lid on, and find out weeks later whether it worked. Low-cost IoT devices such as the Tilt hydrometer change that: they report gravity and temperature continuously, which shows what the batch is doing.
+
+BrewIQ turns that data into something a brewer can act on:
+
+- **Live view of every batch.** Gravity and temperature charts, status and progress for each running fermentation.
+- **Corrective recommendations** *(planned)*. Anomaly and warning detection for the things that commonly go wrong: temperature outside the yeast's range, a stalled fermentation, or one that has gone far enough and needs a cold crash.
+- **A library of batches and recipes.** Every batch is kept with its recipe, yeast and readings, so you can compare past brews and repeat the good ones. Recipes can be imported from a product page or PDF, and the yeast library carries vendor temperature and attenuation specs.
+
+## How it's built
+
+Built on Azure and Microsoft Fabric. A Tilt hydrometer (or the included simulator) sends gravity and temperature to IoT Hub; an eventstream lands the events in an Eventhouse; a Power BI semantic model exposes them to a Rayfin (Fabric Apps) web app that manages batches, recipes and yeasts.
 
 ```
 Tilt / simulator -> IoT Hub -> Eventstream -> Eventhouse (TiltEvents) -> Semantic model (BrewEvents) -> Rayfin app

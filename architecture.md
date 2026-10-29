@@ -5,8 +5,13 @@ Keep this file current: update the Decisions, Pending and Known issues sections 
 
 ## 1. What it is
 
-BrewIQ is a home-brewing analytics solution on Azure and Microsoft Fabric.
-A Tilt hydrometer (simulated) streams gravity and temperature. A web app tracks brew batches, a shared recipe and yeast library, and per-batch fermentation dashboards.
+Fermentation in small-batch brewing and winemaking is usually "cross your fingers and hope". Low-cost IoT devices (the Tilt hydrometer) now make detailed, continuous data available. BrewIQ gives the hobbyist:
+
+1. A live view of the metrics (gravity, temperature) for each running batch.
+2. Recommended corrective actions for common problems (planned: anomaly and warning detection, stalled or over-run fermentation; see Pending ideas).
+3. A library of historical batches and the recipes and yeasts used.
+
+Technically: a Tilt hydrometer (simulated) streams gravity and temperature. A web app tracks brew batches, a shared recipe and yeast library, and per-batch fermentation dashboards.
 
 Owner/user: chmitch. Everything lives in the user's own resources (resource group `cgmbrewiq`, Fabric workspace `BrewIQ`), not in the shared `TiltAnalytics` workspace.
 
