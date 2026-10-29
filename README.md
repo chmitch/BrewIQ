@@ -56,7 +56,7 @@ See [architecture.md](architecture.md) for structure, key decisions, gotchas, pe
 ### Steps
 1. **Configure.** Edit `infra/config.json` (resource group, region, IoT Hub, capacity, workspace names). Set `prefix` to something unique to you; it is applied to the globally unique names (IoT Hub, capacity). Non-secret values only.
 2. **Preview.** `python infra/provision.py all --dry-run`
-3. **Provision.** `python infra/provision.py all` (add `--capacity` to create the Fabric capacity). This creates the IoT Hub, device and consumer group; the workspace, lakehouse, Eventhouse and `TiltEvents` table; the Fabric IoT Hub connection and eventstream; the two notebooks; and imports the semantic model, pointing it at the new Eventhouse and writing its ids into `brewiq-app/rayfin/rayfin.yml`. It is safe to re-run; existing items are skipped. The script prints the resulting ids at the end.
+3. **Provision.** `python infra/provision.py all` (add `--capacity` to create the Fabric capacity). This creates the IoT Hub, device and consumer group; the Foundry resource, `brewiq` project and `brewiq-analyst` model deployment (and grants you the `Cognitive Services OpenAI User` role, then points the `analyzeBatch` function at it); the workspace, lakehouse, Eventhouse and `TiltEvents` table; the Fabric IoT Hub connection and eventstream; the two notebooks; and imports the semantic model, pointing it at the new Eventhouse and writing its ids into `brewiq-app/rayfin/rayfin.yml`. It is safe to re-run; existing items are skipped. The script prints the resulting ids at the end.
 4. **Deploy the app.**
    ```
    cd brewiq-app
@@ -70,7 +70,7 @@ Details and options are in [infra/README.md](infra/README.md).
 ### Not scripted yet
 - Creating the Rayfin app backend itself is done by `rayfin up`.
 - The semantic model's refresh/credential uses your user token, so re-run `python infra/provision.py model` if it expires.
-- Foundry/agent resources are out of scope.
+- Foundry agents are not used; the analyst is a plain model deployment (see `python infra/provision.py foundry`). Model quota (GlobalStandard `gpt-6.1-terra`) must be available in the region.
 
 ## Day-to-day development
 ```

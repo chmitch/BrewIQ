@@ -1,6 +1,6 @@
 """Idempotently provisions everything the BrewIQ Rayfin app depends on (except the app itself).
 
-Usage: python provision.py [azure|fabric|notebooks|all] [--capacity] [--dry-run]
+Usage: python provision.py [azure|foundry|fabric|notebooks|model|all] [--capacity] [--dry-run]
 
 Every step checks for an existing resource first, so re-running is safe.
 Secrets (IoT keys) are fetched at run time and never written to disk.
@@ -25,12 +25,13 @@ DRY = False
 
 
 def apply_prefix(prefix):
-    """Prefixes the names that must be globally unique (IoT Hub, Fabric capacity) plus the resource group; the Fabric connection reuses the hub name."""
+    """Prefixes the names that must be globally unique (IoT Hub, Fabric capacity, Foundry resource) plus the resource group; the Fabric connection reuses the hub name."""
     if prefix and not re.fullmatch(r"[a-z0-9]{1,12}", prefix):
         sys.exit("prefix must be 1-12 lowercase letters or digits")
     CFG["resourceGroup"] = prefix + CFG["resourceGroup"]
     CFG["iotHub"]["name"] = prefix + CFG["iotHub"]["name"]
     CFG["capacity"]["name"] = prefix + CFG["capacity"]["name"]
+    CFG["foundry"]["name"] = prefix + CFG["foundry"]["name"]
     CFG["fabricConnection"] = CFG["iotHub"]["name"]
 
 
@@ -271,10 +272,102 @@ def model(ids):
     print(f"semantic model {name} ready ({did}); rayfin.yml updated")
 
 
+ARM = "https://management.azure.com"
+FOUNDRY_API = "2025-06-01"
+FOUNDRY_ROLE = "Cognitive Services OpenAI User"
+
+
+def arm(method, url, body=None):
+    s, _, b = call(method, f"{ARM}{url}", body, resource=ARM)
+    return s, b
+
+
+def foundry():
+    """Foundry resource, project and the analyst model deployment, plus the app function's endpoint and the signed-in user's access."""
+    f, rg = CFG["foundry"], CFG["resourceGroup"]
+    rc, sub = az("account", "show", "--query", "id", "-o", "tsv")
+    if rc != 0 or not sub:
+        sys.exit("Not signed in to the Azure CLI. Run `az login` and try again.")
+    acct = f"/subscriptions/{sub}/resourceGroups/{rg}/providers/Microsoft.CognitiveServices/accounts/{f['name']}"
+
+    s, _ = arm("GET", f"{acct}?api-version={FOUNDRY_API}")
+    if s == 404:
+        say(f"create Foundry resource {f['name']}")
+        if not DRY:
+            s, b = arm("PUT", f"{acct}?api-version={FOUNDRY_API}", {
+                "location": CFG["location"], "kind": "AIServices", "sku": {"name": "S0"},
+                "identity": {"type": "SystemAssigned"},
+                "properties": {"customSubDomainName": f["name"], "allowProjectManagement": True,
+                               "publicNetworkAccess": "Enabled"}})
+            if s not in (200, 201):
+                sys.exit(f"create Foundry resource failed ({s}): {b}")
+            for _ in range(60):
+                s, b = arm("GET", f"{acct}?api-version={FOUNDRY_API}")
+                state = (b or {}).get("properties", {}).get("provisioningState")
+                if state == "Succeeded":
+                    break
+                if state == "Failed":
+                    sys.exit(f"Foundry resource provisioning failed: {b}")
+                time.sleep(10)
+    elif s != 200:
+        sys.exit(f"read Foundry resource failed ({s})")
+
+    s, _ = arm("GET", f"{acct}/projects/{f['project']}?api-version={FOUNDRY_API}")
+    if s == 404:
+        say(f"create Foundry project {f['project']}")
+        if not DRY:
+            s, b = arm("PUT", f"{acct}/projects/{f['project']}?api-version={FOUNDRY_API}", {
+                "location": CFG["location"], "identity": {"type": "SystemAssigned"}, "properties": {}})
+            if s not in (200, 201):
+                sys.exit(f"create Foundry project failed ({s}): {b}")
+
+    dep = f"{acct}/deployments/{f['deployment']}?api-version={FOUNDRY_API}"
+    s, _ = arm("GET", dep)
+    if s == 404:
+        say(f"deploy model {f['model']} as {f['deployment']}")
+        if not DRY:
+            s, b = arm("PUT", dep, {
+                "sku": {"name": f["sku"], "capacity": f["capacity"]},
+                "properties": {"model": {"format": "OpenAI", "name": f["model"], "version": f["version"]}}})
+            if s not in (200, 201, 202):
+                sys.exit(f"model deployment failed ({s}): {b}")
+            for _ in range(60):
+                s, b = arm("GET", dep)
+                state = (b or {}).get("properties", {}).get("provisioningState")
+                if state == "Succeeded":
+                    break
+                if state == "Failed":
+                    sys.exit(f"model deployment failed: {b}")
+                time.sleep(10)
+
+    # The analyzeBatch function calls Foundry as the signed-in user, so each user needs this role.
+    rc, me = az("ad", "signed-in-user", "show", "--query", "id", "-o", "tsv")
+    if rc == 0 and me:
+        rc, have = az("role", "assignment", "list", "--assignee", me, "--scope", acct, "--role", FOUNDRY_ROLE,
+                      "--query", "[].id", "-o", "tsv")
+        if not have:
+            say(f"grant '{FOUNDRY_ROLE}' on {f['name']} to the signed-in user")
+            if not DRY:
+                az("role", "assignment", "create", "--assignee-object-id", me, "--assignee-principal-type", "User",
+                   "--role", FOUNDRY_ROLE, "--scope", acct, check=True)
+
+    path = ROOT / "brewiq-app" / "packages" / "functions" / "src" / "function_app.ts"
+    endpoint = f"https://{f['name']}.cognitiveservices.azure.com"
+    src = path.read_bytes().decode("utf-8")
+    out = re.sub(r"(const FOUNDRY_ENDPOINT = ')[^']*(';)", lambda m: m.group(1) + endpoint + m.group(2), src)
+    out = re.sub(r"(const FOUNDRY_DEPLOYMENT = ')[^']*(';)", lambda m: m.group(1) + f["deployment"] + m.group(2), out)
+    if out != src:
+        say(f"point analyzeBatch at {endpoint} ({f['deployment']})")
+        if not DRY:
+            path.write_bytes(out.encode("utf-8"))
+    print(f"Foundry ready: {endpoint} deployment {f['deployment']}")
+    return {"foundryEndpoint": endpoint}
+
+
 def main():
     global DRY
     p = argparse.ArgumentParser()
-    p.add_argument("step", nargs="?", default="all", choices=["azure", "fabric", "notebooks", "model", "all"])
+    p.add_argument("step", nargs="?", default="all", choices=["azure", "foundry", "fabric", "notebooks", "model", "all"])
     p.add_argument("--capacity", action="store_true", help="also create the Fabric capacity")
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--prefix", help="override config.json prefix (lowercase letters/digits)")
@@ -283,6 +376,8 @@ def main():
     apply_prefix(a.prefix if a.prefix is not None else CFG.get("prefix", ""))
     if a.step in ("azure", "all"):
         azure()
+    if a.step in ("foundry", "all"):
+        foundry()
     if a.capacity:
         capacity()
     ids = {}

@@ -3,6 +3,7 @@ import type { BatchRecord } from '@rayfin-app/shared';
 import { ArrowLeft, CheckCircle2, RefreshCw } from 'lucide-react';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 
+import { BatchAnalysis } from '@/components/BatchAnalysis';
 import { RecipePanel, YeastPanel } from '@/components/LibraryPanels';
 import { ErrorState, LoadingState } from '@/components/states';
 import type { Library } from '@/hooks/use-library';
@@ -93,7 +94,7 @@ export function BatchDashboard({
 }) {
   const theme = useCssTheme();
   const isActive = !batch.endDate;
-  const [tab, setTab] = useState<'telemetry' | 'recipe' | 'yeast'>('telemetry');
+  const [tab, setTab] = useState<'telemetry' | 'recipe' | 'yeast' | 'analysis'>('telemetry');
 
   // Advancing `tick` moves the window's end, which changes the query text and
   // re-runs it: that is the once-a-minute refresh. A finished batch never ticks.
@@ -291,6 +292,7 @@ export function BatchDashboard({
             ['telemetry', 'Telemetry'],
             ['recipe', 'Recipe'],
             ['yeast', 'Yeast'],
+            ['analysis', 'Analysis'],
           ] as const
         ).map(([id, label]) => (
           <button
@@ -314,6 +316,8 @@ export function BatchDashboard({
         <RecipePanel key={`${batch.recipeId}-${batch.yeastId}`} batch={batch} library={library} onLink={onLink} />
       ) : tab === 'yeast' ? (
         <YeastPanel key={`${batch.recipeId}-${batch.yeastId}`} batch={batch} library={library} onLink={onLink} />
+      ) : tab === 'analysis' ? (
+        <BatchAnalysis key={batch.id} batch={batch} library={library} />
       ) : (
         <>
       {summaryError ? <ErrorState message={summaryError} onRetry={() => void summaryQ.refetch()} /> : null}

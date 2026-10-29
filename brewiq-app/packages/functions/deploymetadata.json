@@ -123,6 +123,51 @@
         ]
       },
       "functionCode": "udf.func(\n  'getImport',\n  async (\n    ctx: RayfinContext<Record<string, never>, AudienceType.Storage>,\n    jobId: string,\n  ): Promise<ImportStatus> => {\n    if (!JOB_ID_PATTERN.test(jobId)) {\n      return { status: 'error', error: 'Invalid job id.' };\n    }\n    const res = await fetch(\n      `${ONELAKE}/${WORKSPACE_ID}/${LAKEHOUSE_ID}/Files/import/${jobId}.json`,\n      { headers: { Authorization: `Bearer ${ctx.Tokens.Storage}` } },\n    );\n    if (res.status === 404) return { status: 'running' };\n    if (!res.ok) {\n      return { status: 'error', error: `Result read failed (${res.status}).` };\n    }\n    const body = (await res.json()) as {\n      status?: string;\n      recipe?: unknown;\n      error?: string;\n    };\n    if (body.status === 'ok' && body.recipe) {\n      return { status: 'ok', recipeJson: JSON.stringify(body.recipe) };\n    }\n    return {\n      status: 'error',\n      error: String(body.error ?? 'Import failed.').slice(0, 500),\n    };\n  },\n  [],\n)"
+    },
+    {
+      "name": "analyzeBatch",
+      "scriptFile": "src\\function_app.ts",
+      "bindings": [
+        {
+          "name": "req",
+          "type": "httpTrigger",
+          "direction": "in",
+          "authLevel": "anonymous",
+          "methods": [
+            "post"
+          ],
+          "route": "analyzeBatch"
+        },
+        {
+          "name": "$return",
+          "type": "http",
+          "direction": "out"
+        },
+        {
+          "name": "__generic_AzureAI",
+          "direction": "in",
+          "type": "FabricItem",
+          "alias": "",
+          "audienceType": "AzureAI"
+        }
+      ],
+      "fabricProperties": {
+        "fabricMetadataSchemaVersion": "1.0",
+        "fabricFunctionReturnType": "Promise<AnalyzeBatchResult>",
+        "fabricFunctionParameters": [
+          {
+            "name": "ctx",
+            "dataType": "RayfinContext<Record<string, never>, AudienceType.AzureAI>",
+            "hasDefaultValue": false
+          },
+          {
+            "name": "briefJson",
+            "dataType": "string",
+            "hasDefaultValue": false
+          }
+        ]
+      },
+      "functionCode": "udf.func(\n  'analyzeBatch',\n  async (\n    ctx: RayfinContext<Record<string, never>, AudienceType.AzureAI>,\n    briefJson: string,\n  ): Promise<AnalyzeBatchResult> => {\n    if (briefJson.length > MAX_BRIEF_LENGTH) {\n      return { ok: false, message: 'The batch brief is too large.' };\n    }\n    try {\n      JSON.parse(briefJson);\n    } catch {\n      return { ok: false, message: 'The batch brief is not valid JSON.' };\n    }\n\n    let res: Response;\n    try {\n      res = await fetch(\n        `${FOUNDRY_ENDPOINT}/openai/deployments/${FOUNDRY_DEPLOYMENT}/chat/completions?api-version=${FOUNDRY_API_VERSION}`,\n        {\n          method: 'POST',\n          headers: {\n            Authorization: `Bearer ${ctx.Tokens.AzureAI}`,\n            'Content-Type': 'application/json',\n          },\n          body: JSON.stringify({\n            messages: [\n              { role: 'system', content: ANALYST_PROMPT },\n              { role: 'user', content: briefJson },\n            ],\n            response_format: { type: 'json_object' },\n            max_completion_tokens: 4000,\n          }),\n          signal: AbortSignal.timeout(90_000),\n        },\n      );\n    } catch {\n      return { ok: false, message: 'The analyst did not respond in time.' };\n    }\n    if (!res.ok) {\n      return { ok: false, message: `The analyst returned ${res.status}.` };\n    }\n\n    const body = (await res.json()) as {\n      model?: string;\n      choices?: { message?: { content?: string } }[];\n    };\n    let parsed: {\n      health?: string;\n      summary?: string;\n      findings?: Partial<AnalysisFinding>[];\n      next_check?: string;\n    };\n    try {\n      parsed = JSON.parse(body.choices?.[0]?.message?.content ?? '');\n    } catch {\n      return { ok: false, message: 'The analyst returned an unreadable answer.' };\n    }\n\n    return {\n      ok: true,\n      health: HEALTHS.includes(parsed.health ?? '')\n        ? (parsed.health as 'good' | 'watch' | 'problem')\n        : 'watch',\n      summary: String(parsed.summary ?? ''),\n      findings: (parsed.findings ?? []).slice(0, 10).map((f) => ({\n        title: String(f.title ?? ''),\n        severity: SEVERITIES.includes(f.severity ?? '')\n          ? (f.severity as AnalysisFinding['severity'])\n          : 'info',\n        evidence: String(f.evidence ?? ''),\n        recommendation: String(f.recommendation ?? ''),\n      })),\n      nextCheck: String(parsed.next_check ?? ''),\n      model: String(body.model ?? FOUNDRY_DEPLOYMENT),\n    };\n  },\n  [],\n)"
     }
   ]
 }

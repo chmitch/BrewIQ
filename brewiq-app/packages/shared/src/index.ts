@@ -90,3 +90,5 @@ export type UniversalAppSchema = {
   Recipe: RecipeRecord;
   RecipeIngredient: RecipeIngredientRecord;
 };
+
+export * from './batch-brief.js';

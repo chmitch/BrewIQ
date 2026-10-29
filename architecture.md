@@ -48,7 +48,7 @@ Frontend polls getImport every 5 s, shows a review form, user saves.
 | Notebook `RecipeImport` | `48b4636a-12ba-4eeb-95a4-5b527435aa97` |
 | Semantic model `BrewEvents` | `082ed118-ece2-4b7a-9703-0c1a23b210d2` (uploaded as a .pbix) |
 | Live app | https://crisp-pond-c9e27b9e4c-centralus.webapp.fabricapps.net |
-| Foundry | `cgmbrewiq-foundry` (has a `gpt-4.1-mini` deployment; reserved for a future brew-analysis agent) |
+| Foundry | `cgmbrewiq-foundry`, project `brewiq`, deployment `brewiq-analyst` (gpt-6.1-terra) powering "Analyze my batch"; also a pre-existing `gpt-4.1-mini` |
 
 Tenant policies: Cognitive Services key auth is forced off; Key Vault public access is forced off.
 
@@ -115,6 +115,7 @@ Republish RecipeImport: `python notebooks\recipe_import\build_notebook.py python
 10. **Pipeline constraint**: IoT Hub messages must carry a JSON content type or the eventstream drops them. Ingestion latency is about 5 minutes.
 11. **UI**: warm amber "brewery" theme (Fraunces/Inter, light+dark), tiled hop/bubble SVG background, header with segmented Batches/Recipes nav, New batch on its own page. Charts: gravity amber with area fill (y-axis floored at 1.000), temperature copper. Root div must stay transparent or it hides the background.
 12. No Key Vault, no extra service principals, everything in `cgmbrewiq`.
+13. **AI analyst ("Analyze my batch")**: the browser builds a deterministic brief (`buildBatchBrief` in `packages\shared`: phase, expected FG, temperature-range metrics, candidate findings, a thinned series) from the whole-batch hourly series plus the linked recipe and yeast, and sends it to the `analyzeBatch` function. The function calls the `brewiq-analyst` deployment (gpt-6.1-terra, chosen from a 7-model benchmark in `tools\analysis_eval\` for depth versus about 5 s latency) using the signed-in user's `AzureAI` token, so users need the `Cognitive Services OpenAI User` role on the Foundry resource and no key is stored. The prompt (`functions\src\analyst-prompt.ts`) treats the Tilt as a sealed in-fermenter hydrometer: no manual-hydrometer advice.
 
 ## 7. Working on the project (gotchas)
 
@@ -134,7 +135,7 @@ Republish RecipeImport: `python notebooks\recipe_import\build_notebook.py python
 - Manual edit form for recipe fields (OG, pitch temp, etc.) on the Recipes page.
 - Group the yeast picker by category.
 - Photos of the user's own brews (store in lakehouse `Files` via a function); the kit image would be the fallback.
-- Foundry brew-analysis agent using `cgmbrewiq-foundry`.
+- Analyst follow-ups: pass anomalies into the brief (needs a query that returns flagged readings with deviations), cache or save analyses per batch, stream the answer, handle over-attenuation (possible infection or wild yeast) explicitly in the prompt, and wrap the analyst as a Foundry agent with tools.
 - Regenerate the simulated history batches from the real recipes.
 - Capture vendor specs for kit-only yeasts (Imperial, Omega, Danstar) so they have authoritative temps/attenuation.
 - Chart palette tuning beyond the two lines; more detail on the batch dashboard (e.g. hero image).

@@ -25,6 +25,19 @@ export type AppFunctionsSchema = {
     input: { pageUrl: string };
     output: { ok: true; imageUrl: null | string; pdfUrl: null | string } | { ok: false; message: string };
   };
+  analyzeBatch: {
+    input: { briefJson: string };
+    output:
+      | {
+          ok: true;
+          health: 'good' | 'watch' | 'problem';
+          summary: string;
+          findings: { title: string; severity: 'info' | 'warning' | 'critical'; evidence: string; recommendation: string }[];
+          nextCheck: string;
+          model: string;
+        }
+      | { ok: false; message: string };
+  };
   getImport: {
     input: { jobId: string };
     output: { status: 'running' } | { status: 'error'; error: string } | { status: 'ok'; recipeJson: string };

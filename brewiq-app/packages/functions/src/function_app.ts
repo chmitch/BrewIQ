@@ -4,6 +4,7 @@ import {
   type RayfinContext,
 } from '@microsoft/fabric-user-data-functions';
 import { randomUUID } from 'node:crypto';
+import { ANALYST_PROMPT } from './analyst-prompt.js';
 
 const udf = new UserDataFunctions();
 
@@ -205,6 +206,112 @@ udf.func(
     return {
       status: 'error',
       error: String(body.error ?? 'Import failed.').slice(0, 500),
+    };
+  },
+  [],
+);
+
+const FOUNDRY_ENDPOINT = 'https://cgmbrewiq-foundry.cognitiveservices.azure.com';
+const FOUNDRY_DEPLOYMENT = 'brewiq-analyst';
+const FOUNDRY_API_VERSION = '2025-04-01-preview';
+const MAX_BRIEF_LENGTH = 60_000;
+
+type AnalysisFinding = {
+  title: string;
+  severity: 'info' | 'warning' | 'critical';
+  evidence: string;
+  recommendation: string;
+};
+
+type AnalyzeBatchResult =
+  | {
+      ok: true;
+      health: 'good' | 'watch' | 'problem';
+      summary: string;
+      findings: AnalysisFinding[];
+      nextCheck: string;
+      model: string;
+    }
+  | { ok: false; message: string };
+
+const SEVERITIES = ['info', 'warning', 'critical'];
+const HEALTHS = ['good', 'watch', 'problem'];
+
+udf.func(
+  'analyzeBatch',
+  async (
+    ctx: RayfinContext<Record<string, never>, AudienceType.AzureAI>,
+    briefJson: string,
+  ): Promise<AnalyzeBatchResult> => {
+    if (briefJson.length > MAX_BRIEF_LENGTH) {
+      return { ok: false, message: 'The batch brief is too large.' };
+    }
+    try {
+      JSON.parse(briefJson);
+    } catch {
+      return { ok: false, message: 'The batch brief is not valid JSON.' };
+    }
+
+    let res: Response;
+    try {
+      res = await fetch(
+        `${FOUNDRY_ENDPOINT}/openai/deployments/${FOUNDRY_DEPLOYMENT}/chat/completions?api-version=${FOUNDRY_API_VERSION}`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${ctx.Tokens.AzureAI}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            messages: [
+              { role: 'system', content: ANALYST_PROMPT },
+              { role: 'user', content: briefJson },
+            ],
+            response_format: { type: 'json_object' },
+            max_completion_tokens: 4000,
+          }),
+          signal: AbortSignal.timeout(90_000),
+        },
+      );
+    } catch {
+      return { ok: false, message: 'The analyst did not respond in time.' };
+    }
+    if (!res.ok) {
+      return { ok: false, message: `The analyst returned ${res.status}.` };
+    }
+
+    const body = (await res.json()) as {
+      model?: string;
+      choices?: { message?: { content?: string } }[];
+    };
+    let parsed: {
+      health?: string;
+      summary?: string;
+      findings?: Partial<AnalysisFinding>[];
+      next_check?: string;
+    };
+    try {
+      parsed = JSON.parse(body.choices?.[0]?.message?.content ?? '');
+    } catch {
+      return { ok: false, message: 'The analyst returned an unreadable answer.' };
+    }
+
+    return {
+      ok: true,
+      health: HEALTHS.includes(parsed.health ?? '')
+        ? (parsed.health as 'good' | 'watch' | 'problem')
+        : 'watch',
+      summary: String(parsed.summary ?? ''),
+      findings: (parsed.findings ?? []).slice(0, 10).map((f) => ({
+        title: String(f.title ?? ''),
+        severity: SEVERITIES.includes(f.severity ?? '')
+          ? (f.severity as AnalysisFinding['severity'])
+          : 'info',
+        evidence: String(f.evidence ?? ''),
+        recommendation: String(f.recommendation ?? ''),
+      })),
+      nextCheck: String(parsed.next_check ?? ''),
+      model: String(body.model ?? FOUNDRY_DEPLOYMENT),
     };
   },
   [],
