@@ -14,7 +14,7 @@ BrewIQ turns that data into something a brewer can act on:
 
 **Required**
 1. **A Tilt hydrometer** ([tilthydrometer.com](https://tilthydrometer.com/)): a floating Bluetooth sensor that reports specific gravity and temperature from inside the fermenter.
-2. **A Raspberry Pi with Bluetooth**: sits within range of the vessel, reads the Tilt's Bluetooth broadcasts and forwards them to Azure IoT Hub as JSON messages (`eventtime`, `gravity`, `temp`).
+2. **A Raspberry Pi with Bluetooth**: sits within range of the vessel, reads the Tilt's Bluetooth broadcasts and forwards them to Azure IoT Hub as JSON messages (`eventtime`, `gravity`, `temp`). [DataSciNAll/pytiltiot](https://github.com/DataSciNAll/pytiltiot/) covers the Pi setup: it scans for the Tilt and sends the readings to IoT Hub, and includes a systemd service to run it at boot (based on atlefren/pytilt).
 3. **A fermentation vessel**: a fermenter large enough for your batch that the Tilt can float in.
 
 **Optional**
@@ -22,7 +22,7 @@ BrewIQ turns that data into something a brewer can act on:
 
 No hardware yet? The `TiltEvent-Simulator` notebook generates realistic Tilt events, so you can run and try the whole solution without a Tilt or a Pi.
 
-> The Pi-side forwarder is not in this repo yet. The simulator sends the same message shape to the same IoT Hub device (`tiltsim`).
+> The Pi-side forwarder is not part of this repo; use [pytiltiot](https://github.com/DataSciNAll/pytiltiot/) and point it at your IoT Hub device (the simulator uses `tiltsim`). Make sure the messages are JSON with a JSON content type and the fields `eventtime`, `gravity` and `temp`, or the eventstream will drop them. The simulator sends the same message shape.
 
 ## How it's built
 
