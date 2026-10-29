@@ -130,7 +130,43 @@ export function BatchDashboard({
     return { from: new Date(f), to: new Date(Math.max(f, t)) };
   }, [batch.startDate, batchEnd, preset, customFrom, customTo]);
 
-  const series = batchSeries({ from, to });
+  // Guides come from the linked yeast's range and the recipe OG with the yeast's attenuation; none if unlinked.
+  const yeast = batch.yeastId ? library.yeastById.get(batch.yeastId) : undefined;
+  const recipe = batch.recipeId ? library.recipeById.get(batch.recipeId) : undefined;
+  const hasYeastRange = yeast?.tempMinTenthsF != null && yeast?.tempMaxTenthsF != null;
+  const tempMin = hasYeastRange ? yeast.tempMinTenthsF! / 10 : null;
+  const tempMax = hasYeastRange ? yeast.tempMaxTenthsF! / 10 : null;
+  // Expected FG = 1 + (OG - 1) * (1 - attenuation), using the yeast's attenuation range; none without both.
+  const og = (recipe?.ogPoints ?? batch.targetOGPoints) / 1000;
+  const attMin = yeast?.attenuationMinPct;
+  const attMax = yeast?.attenuationMaxPct;
+  const expectedFg =
+    og > 1 && attMin != null && attMax != null
+      ? (() => {
+          const fgAt = (att: number) => 1 + (og - 1) * (1 - att / 100);
+          return { low: fgAt(attMax), high: fgAt(attMin), mid: fgAt((attMin + attMax) / 2) };
+        })()
+      : null;
+  const series = batchSeries({
+    from,
+    to,
+    temperatureGuides:
+      tempMin != null && tempMax != null
+        ? {
+            band: { from: tempMin, to: tempMax, color: '#16a34a' },
+            lines: [
+              { value: tempMin, label: `Floor ${tempMin.toFixed(0)}°F`, color: '#16a34a' },
+              { value: tempMax, label: `Ceiling ${tempMax.toFixed(0)}°F`, color: '#16a34a' },
+            ],
+          }
+        : undefined,
+    gravityGuides: expectedFg
+      ? {
+          band: { from: expectedFg.low, to: expectedFg.high, color: '#2563eb' },
+          lines: [{ value: expectedFg.mid, label: `Expected FG ${expectedFg.mid.toFixed(3)}`, color: '#2563eb' }],
+        }
+      : undefined,
+  });
   const summary = batchSummary({ from: batch.startDate, to: batchEnd });
   // A completed batch carries its final metrics, so skip the summary query.
   const stored = !isActive && batch.ogPoints != null && batch.fgPoints != null;

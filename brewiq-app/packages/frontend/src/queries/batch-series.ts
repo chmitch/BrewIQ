@@ -5,6 +5,7 @@ import gravitySpec from './batch-series-gravity.json';
 import temperatureSpec from './batch-series-temperature.json';
 
 import { toDaxDateTime } from '@/lib/dax-datetime';
+import { withGuides, type ChartGuides } from '@/lib/chart-guides';
 import type { ColumnMetadataMap } from '@/lib/to-data-table';
 
 const connection = 'brewevents';
@@ -35,10 +36,13 @@ interface BatchSeriesParams {
   from: Date;
   /** Inclusive end of the window, as a UTC instant. */
   to: Date;
+  /** Optional constant guide lines drawn on the charts. */
+  temperatureGuides?: ChartGuides;
+  gravityGuides?: ChartGuides;
 }
 
 /** Hourly gravity and temperature averages across a window. */
-export function batchSeries({ from, to }: BatchSeriesParams) {
+export function batchSeries({ from, to, temperatureGuides, gravityGuides }: BatchSeriesParams) {
   const query = baseQuery
     .replace('__FROM__', toDaxDateTime(from))
     .replace('__TO__', toDaxDateTime(to));
@@ -46,7 +50,7 @@ export function batchSeries({ from, to }: BatchSeriesParams) {
     connection,
     query,
     columnMetadata,
-    gravitySpec: gravitySpec as VisualizationSpec,
-    temperatureSpec: temperatureSpec as VisualizationSpec,
+    gravitySpec: withGuides(gravitySpec as VisualizationSpec, gravityGuides),
+    temperatureSpec: withGuides(temperatureSpec as VisualizationSpec, temperatureGuides),
   };
 }
