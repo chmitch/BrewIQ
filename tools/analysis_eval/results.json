@@ -1,136 +1,38 @@
 [
  {
-  "model": "bench-gpt-6.1-terra",
+  "model": "--help",
   "scenario": "healthy-complete",
-  "seconds": 5.9,
-  "prompt_tokens": 7366,
-  "completion_tokens": 270,
-  "reasoning_tokens": 65,
-  "valid_json": true,
-  "output": {
-   "health": "good",
-   "summary": "Fermentation appears complete at the expected final gravity. The beer has had several days at a suitable temperature for cleanup.",
-   "findings": [
-    {
-     "title": "Final gravity reached",
-     "severity": "info",
-     "evidence": "Gravity has stayed around 1.010\u20131.011 since July 10; the expected range is 1.009\u20131.011. Attenuation is 79.5%, within the yeast's 78\u201382% range, and temperature stayed within 59\u201375\u00b0F.",
-     "recommendation": "If aroma and taste are clean, you can cold crash or package. If you notice buttery character, leave the beer on the yeast a little longer before packaging."
-    }
-   ],
-   "next_check": "Before packaging, look for a continued stable Tilt trend and check for buttery aroma or taste."
-  }
+  "error": "404 {\n  \"error\": {\n    \"type\": \"invalid_request_error\",\n    \"code\": \"DeploymentNotFound\",\n    \"message\": \"The API deployment for this resource does not exist. If you created the deployment within the last 5 minutes, please wait a moment and try again.\"\n  }\n}",
+  "seconds": 3.4
  },
  {
-  "model": "bench-gpt-6.1-terra",
+  "model": "--help",
   "scenario": "stalled-cold",
-  "seconds": 7.1,
-  "prompt_tokens": 7464,
-  "completion_tokens": 406,
-  "reasoning_tokens": 159,
-  "valid_json": true,
-  "output": {
-   "health": "problem",
-   "summary": "Fermentation appears stalled well above the expected final gravity. Extended cold conditions are a likely cause.",
-   "findings": [
-    {
-     "title": "Stalled fermentation in cold conditions",
-     "severity": "warning",
-     "evidence": "Gravity has remained around 1.027 for more than two days, versus an expected FG of 1.009\u20131.011. The beer spent 131 hours below the yeast's 59\u201375\u00b0F range; the reported current temperature is 57.1\u00b0F.",
-     "recommendation": "Gradually warm the beer to around 65\u00b0F, then gently swirl the closed fermenter without splashing. Watch the Tilt trend for 24\u201348 hours; if gravity remains flat above expected FG, repitch fresh, healthy yeast. Do not crash or package yet."
-    }
-   ],
-   "next_check": "Check the Tilt gravity trend 24\u201348 hours after warming and rousing. Once gravity is near expected FG, leave it on the yeast until stable for 2\u20133 days and allow cleanup before packaging."
-  }
+  "error": "404 {\n  \"error\": {\n    \"type\": \"invalid_request_error\",\n    \"code\": \"DeploymentNotFound\",\n    \"message\": \"The API deployment for this resource does not exist. If you created the deployment within the last 5 minutes, please wait a moment and try again.\"\n  }\n}",
+  "seconds": 3.5
  },
  {
-  "model": "bench-gpt-6.1-terra",
+  "model": "--help",
   "scenario": "hot-fast",
-  "seconds": 10.4,
-  "prompt_tokens": 7552,
-  "completion_tokens": 762,
-  "reasoning_tokens": 394,
-  "valid_json": true,
-  "output": {
-   "health": "watch",
-   "summary": "Gravity is near the expected finish, but fermentation has spent substantial time too warm. Bring the temperature down gently and allow cleanup before packaging.",
-   "findings": [
-    {
-     "title": "Sustained high and fluctuating temperature",
-     "severity": "warning",
-     "evidence": "The reported current temperature is 80.4\u00b0F, versus the yeast range of 59\u201375\u00b0F; the latest series point is 81.9\u00b0F. Temperature was above range for 145 hours and ranged from 74.7\u201383.6\u00b0F in the last 24 hours.",
-     "recommendation": "Gradually cool the fermenter into the yeast range and keep it steady, using a controlled cooler or lower ambient temperature. Warm fermentation can cause fruity or solvent-like flavors, though the readings cannot establish whether they are present."
-    },
-    {
-     "title": "Near final gravity; allow cleanup",
-     "severity": "info",
-     "evidence": "Gravity is 1.009, within the expected 1.009\u20131.011 range, and the series has stayed around 1.009\u20131.010 since July 6. Attenuation is 81.9%, within the yeast's 78\u201382% range.",
-     "recommendation": "Hold within the yeast temperature range for another 2 days and watch the Tilt trend. Package or cold-crash only if gravity remains stable and cleanup has passed."
-    }
-   ],
-   "next_check": "Check temperature as it cools, then review the Tilt gravity trend over the next 2 days; assess aroma and flavor for warm-fermentation or buttery notes before packaging."
-  }
+  "error": "404 {\n  \"error\": {\n    \"type\": \"invalid_request_error\",\n    \"code\": \"DeploymentNotFound\",\n    \"message\": \"The API deployment for this resource does not exist. If you created the deployment within the last 5 minutes, please wait a moment and try again.\"\n  }\n}",
+  "seconds": 3.4
  },
  {
-  "model": "bench-gpt-6.1-terra",
+  "model": "--help",
   "scenario": "never-started",
-  "seconds": 6.9,
-  "prompt_tokens": 6127,
-  "completion_tokens": 436,
-  "reasoning_tokens": 103,
-  "valid_json": true,
-  "output": {
-   "health": "problem",
-   "summary": "Fermentation has shown almost no gravity drop after 3.3 days, well beyond a normal lag. The temperature is within the yeast\u2019s range but near its cool end; pitch rate or yeast viability may also be factors.",
-   "findings": [
-    {
-     "title": "Fermentation has not meaningfully started",
-     "severity": "critical",
-     "evidence": "Gravity is 1.052, essentially unchanged from the 1.052 OG, versus an expected FG near 1.010. Temperature has averaged 62\u00b0F, within the yeast\u2019s 59\u201375\u00b0F range.",
-     "recommendation": "Check pitch history and look for krausen. If yeast was not pitched, pitch fresh yeast now. Otherwise, gradually warm toward the middle of the yeast\u2019s range and gently swirl without splashing. Watch the Tilt trend for 24\u201348 hours; if gravity remains flat, repitch fresh, healthy yeast. Do not crash or package."
-    },
-    {
-     "title": "Isolated outliers",
-     "severity": "info",
-     "evidence": "One gravity reading of 1.066 and one temperature reading of 71.5\u00b0F were flagged as anomalies.",
-     "recommendation": "Treat these isolated readings as likely noise unless similar outliers repeat; follow the overall Tilt trend."
-    }
-   ],
-   "next_check": "Review the Tilt gravity trend in 24\u201348 hours after warming and rousing; repitch if it remains flat."
-  }
+  "error": "404 {\n  \"error\": {\n    \"type\": \"invalid_request_error\",\n    \"code\": \"DeploymentNotFound\",\n    \"message\": \"The API deployment for this resource does not exist. If you created the deployment within the last 5 minutes, please wait a moment and try again.\"\n  }\n}",
+  "seconds": 3.5
  },
  {
-  "model": "bench-gpt-6.1-terra",
+  "model": "--help",
   "scenario": "cold-crash-candidate",
-  "error": "429 {\n  \"error\": {\n    \"message\": \"Your requests to gpt-6.1-terra for bench-gpt-6.1-terra in centralus have exceeded token rate limit.\",\n    \"type\": \"too_many_requests\",\n    \"param\": null,\n    \"code\": \"rate_limit_exceeded\"\n  }\n}",
-  "seconds": 3.0
+  "error": "404 {\n  \"error\": {\n    \"type\": \"invalid_request_error\",\n    \"code\": \"DeploymentNotFound\",\n    \"message\": \"The API deployment for this resource does not exist. If you created the deployment within the last 5 minutes, please wait a moment and try again.\"\n  }\n}",
+  "seconds": 3.4
  },
  {
-  "model": "bench-gpt-6.1-terra",
+  "model": "--help",
   "scenario": "over-attenuating",
-  "seconds": 7.2,
-  "prompt_tokens": 7450,
-  "completion_tokens": 497,
-  "reasoning_tokens": 116,
-  "valid_json": true,
-  "output": {
-   "health": "watch",
-   "summary": "The beer is drier than expected, and the recent gravity trend does not yet establish that fermentation is finished. Hold off packaging while the Tilt trend settles.",
-   "findings": [
-    {
-     "title": "Low gravity with continued drift",
-     "severity": "warning",
-     "evidence": "Gravity is 1.006 versus an expected 1.009\u20131.011, with 88.6% attenuation versus the yeast's 78\u201382% range. It fell 1.2 points over 72 hours after an earlier plateau around 1.010. Temperature stayed within the yeast's range at 66.5\u201369.5\u00b0F.",
-     "recommendation": "Keep the beer on the yeast at its current temperature and wait for a flat Tilt trend for 2\u20133 days before cold crashing or packaging. Review the mash temperature and sugar additions: a highly fermentable recipe could explain the dryness. Continued decline after the earlier plateau can also indicate contamination, though gravity alone cannot confirm it; look for a film or unusual aroma if visible without opening the fermenter."
-    },
-    {
-     "title": "Drier than the style range",
-     "severity": "info",
-     "evidence": "Gravity of 1.006 is below the American Pale Ale range of 1.010\u20131.015.",
-     "recommendation": "Expect a potentially lighter, drier finish; compare it with your intended recipe rather than treating the style range as a defect. Kit recipes can fall outside style ranges."
-    }
-   ],
-   "next_check": "Watch the Tilt trend over the next 2\u20133 days. If gravity continues to fall, keep waiting before packaging and look for signs of contamination."
-  }
+  "error": "404 {\n  \"error\": {\n    \"type\": \"invalid_request_error\",\n    \"code\": \"DeploymentNotFound\",\n    \"message\": \"The API deployment for this resource does not exist. If you created the deployment within the last 5 minutes, please wait a moment and try again.\"\n  }\n}",
+  "seconds": 3.3
  }
 ]

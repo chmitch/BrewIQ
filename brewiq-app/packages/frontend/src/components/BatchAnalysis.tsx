@@ -19,6 +19,8 @@ const HEALTH = {
   problem: { label: 'Needs attention', cls: 'bg-red-100 text-red-800' },
 } as const;
 
+const FINISHED_LABEL = { good: 'Turned out well', watch: 'Off plan', problem: 'Problems found' } as const;
+
 const SEVERITY = {
   info: 'border-border',
   warning: 'border-amber-400',
@@ -151,7 +153,7 @@ export function BatchAnalysis({
         <div className="space-y-400">
           <section className="rounded-2xl border border-border bg-card p-400 shadow-sm">
             <span className={`rounded-full px-300 py-100 text-200 font-medium ${HEALTH[state.analysis.health].cls}`}>
-              {HEALTH[state.analysis.health].label}
+              {batch.endDate ? FINISHED_LABEL[state.analysis.health] : HEALTH[state.analysis.health].label}
             </span>
             <p className="mt-300 text-400">{state.analysis.summary}</p>
           </section>
@@ -167,7 +169,7 @@ export function BatchAnalysis({
           ))}
           {state.analysis.nextCheck ? (
             <p className="text-300">
-              <span className="font-medium">Next check:</span> {state.analysis.nextCheck}
+              <span className="font-medium">{batch.endDate ? 'Next step:' : 'Next check:'}</span> {state.analysis.nextCheck}
             </p>
           ) : null}
           <p className="text-200 text-muted-foreground">
