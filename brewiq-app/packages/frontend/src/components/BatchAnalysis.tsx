@@ -1,6 +1,6 @@
 import { buildBatchBrief, type BatchRecord, type BriefReading } from '@rayfin-app/shared';
 import { Sparkles } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import type { Library } from '@/hooks/use-library';
 import { executeSemanticModelQuery } from '@/hooks/use-semantic-model-query';
@@ -25,13 +25,25 @@ const SEVERITY = {
   critical: 'border-red-500',
 } as const;
 
-async function analyze(batch: BatchRecord, library: Library): Promise<Analysis> {
+const TRANSIENT = /evicted|canceled|cancelled|throttl|capacity|timeout|temporar/i;
+
+async function querySeries(batch: BatchRecord) {
   const end = batch.endDate ?? new Date();
   const { connection, query } = batchSeries({ from: batch.startDate, to: end });
-  const result = await executeSemanticModelQuery(connection, query);
-  if (result.status !== 'success') throw new Error(result.error.message);
+  let message = '';
+  // The capacity can evict the model under CPU load; a short wait usually clears it.
+  for (const waitMs of [0, 4000, 10000]) {
+    if (waitMs) await new Promise((r) => setTimeout(r, waitMs));
+    const result = await executeSemanticModelQuery(connection, query);
+    if (result.status === 'success') return result.table;
+    message = result.error.message;
+    if (!TRANSIENT.test(message)) break;
+  }
+  throw new Error(message);
+}
 
-  const { columns, rows } = result.table;
+async function analyze(batch: BatchRecord, library: Library): Promise<Analysis> {
+  const { columns, rows } = await querySeries(batch);
   const col = (n: string) => columns.findIndex((c) => c.name === n);
   const [hour, grav, temp] = [col('[Hour]'), col('[Gravity]'), col('[Temperature]')];
   const readings: BriefReading[] = [];
@@ -87,14 +99,12 @@ export function BatchAnalysis({
   readonly library: Library;
 }) {
   const [state, setState] = useState<
-    | { status: 'idle' }
     | { status: 'running' }
     | { status: 'error'; message: string }
     | { status: 'done'; analysis: Analysis; at: Date }
-  >({ status: 'idle' });
+  >({ status: 'running' });
 
-  const run = async () => {
-    setState({ status: 'running' });
+  const fetchAnalysis = async () => {
     try {
       setState({ status: 'done', analysis: await analyze(batch, library), at: new Date() });
     } catch (e) {
@@ -102,17 +112,29 @@ export function BatchAnalysis({
     }
   };
 
+  const run = () => {
+    setState({ status: 'running' });
+    void fetchAnalysis();
+  };
+
+  // Opening the panel is the request: the first analysis starts as soon as it mounts.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- state is set only after the awaited fetch
+    void fetchAnalysis();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="space-y-400">
-      <div className="flex items-center gap-300">
+      <div className="flex flex-wrap items-center gap-300">
         <button
           type="button"
           disabled={state.status === 'running'}
-          onClick={() => void run()}
+          onClick={run}
           className="inline-flex items-center gap-200 rounded-lg bg-primary px-400 py-200 text-300 font-medium text-primary-foreground disabled:opacity-50"
         >
           <Sparkles className={`icon-size-200 ${state.status === 'running' ? 'animate-pulse' : ''}`} />
-          {state.status === 'running' ? 'Analyzing…' : state.status === 'done' ? 'Analyze again' : 'Analyze my batch'}
+          {state.status === 'running' ? 'Analyzing…' : 'Analyze again'}
         </button>
         <p className="text-200 text-muted-foreground">
           An AI brewing analyst reviews this batch&apos;s gravity and temperature history, recipe and yeast.

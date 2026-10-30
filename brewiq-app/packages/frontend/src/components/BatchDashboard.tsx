@@ -1,6 +1,6 @@
 import { VegaVisual, useCssTheme } from '@microsoft/fabric-visuals';
 import type { BatchRecord } from '@rayfin-app/shared';
-import { ArrowLeft, CheckCircle2, RefreshCw } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, CheckCircle2, RefreshCw, Sparkles, X } from 'lucide-react';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 
 import { BatchAnalysis } from '@/components/BatchAnalysis';
@@ -29,19 +29,30 @@ function toLocalInput(d: Date): string {
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
 }
 
+type Tone = 'warn' | 'bad';
+type Flag = { readonly tone: Tone; readonly text: string } | undefined;
+
+const TONE_CLASS: Record<Tone | 'none', string> = {
+  none: 'border-border bg-card',
+  warn: 'border-amber-400 bg-amber-50 dark:bg-amber-950/30',
+  bad: 'border-red-500 bg-red-50 dark:bg-red-950/30',
+};
+
 function Stat({
   label,
   value,
   unit,
   note,
+  flag,
 }: {
   readonly label: string;
   readonly value: string;
   readonly unit?: string;
   readonly note?: string;
+  readonly flag?: Flag;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-card shadow-sm p-400">
+    <div className={`rounded-2xl border shadow-sm p-400 ${TONE_CLASS[flag?.tone ?? 'none']}`}>
       <p className="text-200 text-muted-foreground">{label}</p>
       <p className="mt-100 font-numeric text-hero-800 font-semibold leading-hero-800">
         {value}
@@ -50,6 +61,15 @@ function Stat({
         ) : null}
       </p>
       {note ? <p className="mt-100 text-200 text-muted-foreground">{note}</p> : null}
+      {flag ? (
+        <p
+          role="status"
+          className={`mt-200 flex items-start gap-100 text-200 font-medium ${flag.tone === 'bad' ? 'text-red-700 dark:text-red-300' : 'text-amber-800 dark:text-amber-300'}`}
+        >
+          <AlertTriangle className="icon-size-200 shrink-0" aria-hidden />
+          {flag.text}
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -94,7 +114,9 @@ export function BatchDashboard({
 }) {
   const theme = useCssTheme();
   const isActive = !batch.endDate;
-  const [tab, setTab] = useState<'telemetry' | 'recipe' | 'yeast' | 'analysis'>('telemetry');
+  const [tab, setTab] = useState<'telemetry' | 'recipe' | 'yeast'>('telemetry');
+  const [analysisOpen, setAnalysisOpen] = useState(false);
+  const [analysisStarted, setAnalysisStarted] = useState(false);
 
   // Advancing `tick` moves the window's end, which changes the query text and
   // re-runs it: that is the once-a-minute refresh. A finished batch never ticks.
@@ -234,10 +256,60 @@ export function BatchDashboard({
     1,
     Math.round((batchEnd.getTime() - batch.startDate.getTime()) / 86_400_000)
   );
+
+  // Cards turn amber or red when a reading leaves the range implied by the linked recipe and yeast.
+  const flags = (() => {
+    const out: { og?: Flag; gravity?: Flag; temp?: Flag; att?: Flag } = {};
+    if (!realStats) return out;
+    const f2 = (n: number) => n.toFixed(3);
+    const ogDiff = realStats.og - batch.targetOGPoints / 1000;
+    if (Math.abs(ogDiff) >= 0.005)
+      out.og = { tone: 'warn', text: `${ogDiff > 0 ? 'Above' : 'Below'} target OG by ${Math.abs(ogDiff * 1000).toFixed(0)} points` };
+
+    if (expectedFg) {
+      const g = realStats.current;
+      const verb = isActive ? 'is' : 'ended';
+      if (g < expectedFg.low - 0.003)
+        out.gravity = { tone: 'bad', text: `Gravity ${verb} below the lowest expected FG (${f2(expectedFg.low)}). Check for over-attenuation or infection.` };
+      else if (g < expectedFg.low - 0.001)
+        out.gravity = { tone: 'warn', text: `Gravity ${verb} just below the expected FG range (${f2(expectedFg.low)}–${f2(expectedFg.high)})` };
+      else if (!isActive && g > expectedFg.high + 0.003)
+        out.gravity = { tone: 'warn', text: `Finished above the expected FG range (${f2(expectedFg.low)}–${f2(expectedFg.high)}). Fermentation may have stalled.` };
+    }
+
+    if (attMin != null && attMax != null && realStats.attenuation != null) {
+      const a = realStats.attenuation;
+      if (a > attMax + 3)
+        out.att = { tone: 'bad', text: `Well above this yeast's ${attMin}–${attMax}% range` };
+      else if (a > attMax)
+        out.att = { tone: 'warn', text: `Above this yeast's ${attMin}–${attMax}% range` };
+      else if (!isActive && a < attMin - 3)
+        out.att = { tone: 'warn', text: `Below this yeast's ${attMin}–${attMax}% range` };
+    }
+
+    if (tempMin != null && tempMax != null) {
+      const lo = stored ? (realStats.minTemp ?? realStats.temp) : realStats.temp;
+      const hi = stored ? (realStats.maxTemp ?? realStats.temp) : realStats.temp;
+      const over = hi - tempMax;
+      const under = tempMin - lo;
+      const worst = Math.max(over, under);
+      if (worst > 0) {
+        const where = over >= under ? `above ${tempMax}°F` : `below ${tempMin}°F`;
+        out.temp = {
+          tone: worst >= 4 ? 'bad' : 'warn',
+          text: `${isActive ? 'Now' : 'Reached'} ${worst.toFixed(1)}°F ${where} (yeast range ${tempMin.toFixed(0)}–${tempMax.toFixed(0)}°F)`,
+        };
+      }
+    }
+    return out;
+  })();
   const batchImage = batch.recipeId ? library.recipeById.get(batch.recipeId)?.imageUrl : undefined;
 
   return (
-    <div className="space-y-600">
+    <div
+      className="space-y-600 transition-[padding] lg:pr-[var(--drawer-pad)]"
+      style={{ '--drawer-pad': analysisOpen ? 'max(0px, calc(30rem - (100vw - 72rem) / 2))' : '0px' } as React.CSSProperties}
+    >
       <div className="flex flex-wrap items-center gap-300">
         <button
           type="button"
@@ -264,6 +336,19 @@ export function BatchDashboard({
             · {isActive ? 'fermenting' : `completed · ${fermentDays} ${fermentDays === 1 ? 'day' : 'days'}`}
           </p>
         </div>
+        <button
+          type="button"
+          aria-pressed={analysisOpen}
+          onClick={() => {
+            setAnalysisStarted(true);
+            setAnalysisOpen((o) => !o);
+          }}
+          className={`inline-flex items-center gap-200 rounded-lg border px-400 py-200 text-300 font-medium ${
+            analysisOpen ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card hover:bg-hover'
+          }`}
+        >
+          <Sparkles className="icon-size-200" /> Analyze
+        </button>
         {isActive ? (
           <button
             type="button"
@@ -292,7 +377,6 @@ export function BatchDashboard({
             ['telemetry', 'Telemetry'],
             ['recipe', 'Recipe'],
             ['yeast', 'Yeast'],
-            ['analysis', 'Analysis'],
           ] as const
         ).map(([id, label]) => (
           <button
@@ -316,8 +400,6 @@ export function BatchDashboard({
         <RecipePanel key={`${batch.recipeId}-${batch.yeastId}`} batch={batch} library={library} onLink={onLink} />
       ) : tab === 'yeast' ? (
         <YeastPanel key={`${batch.recipeId}-${batch.yeastId}`} batch={batch} library={library} onLink={onLink} />
-      ) : tab === 'analysis' ? (
-        <BatchAnalysis key={batch.id} batch={batch} library={library} />
       ) : (
         <>
       {summaryError ? <ErrorState message={summaryError} onRetry={() => void summaryQ.refetch()} /> : null}
@@ -327,6 +409,7 @@ export function BatchDashboard({
           label="Actual OG"
           value={formatSg(realStats?.og)}
           note={`target ${(batch.targetOGPoints / 1000).toFixed(3)}`}
+          flag={flags.og}
         />
         <Stat
           label={isActive ? 'Current gravity' : 'FG'}
@@ -336,9 +419,11 @@ export function BatchDashboard({
               ? `as of ${realStats.lastTime.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}`
               : undefined
           }
+          flag={flags.gravity}
         />
         <Stat
           label={stored ? 'Avg temperature' : 'Temperature'}
+          flag={flags.temp}
           value={realStats ? realStats.temp.toFixed(1) : '—'}
           unit="°F"
           note={
@@ -355,6 +440,7 @@ export function BatchDashboard({
         <Stat
           label="Attenuation"
           value={realStats?.attenuation != null ? realStats.attenuation.toFixed(0) : '—'}
+          flag={flags.att}
           unit="%"
         />
       </div>
@@ -426,6 +512,29 @@ export function BatchDashboard({
       ) : null}
         </>
       )}
+
+      <aside
+        aria-label="Batch analysis"
+        aria-hidden={!analysisOpen}
+        className={`fixed bottom-0 right-0 top-16 z-20 w-full max-w-[30rem] flex-col border-l border-border bg-background shadow-xl ${
+          analysisOpen ? 'flex' : 'hidden'
+        }`}
+      >
+        <div className="flex items-center justify-between border-b border-border px-500 py-300">
+          <h2 className="font-heading text-400 font-semibold">Batch analysis</h2>
+          <button
+            type="button"
+            onClick={() => setAnalysisOpen(false)}
+            aria-label="Close analysis"
+            className="rounded-lg p-200 hover:bg-hover"
+          >
+            <X className="icon-size-200" />
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto p-500">
+          {analysisStarted ? <BatchAnalysis key={batch.id} batch={batch} library={library} /> : null}
+        </div>
+      </aside>
     </div>
   );
 }

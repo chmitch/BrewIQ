@@ -7,7 +7,10 @@ For most hobbyist beer, wine and cider makers, fermentation is a "cross your fin
 BrewIQ turns that data into something a brewer can act on:
 
 - **Live view of every batch.** Gravity and temperature charts, status and progress for each running fermentation.
-- **Corrective recommendations** *(planned)*. Anomaly and warning detection for the things that commonly go wrong: temperature outside the yeast's range, a stalled fermentation, or one that has gone far enough and needs a cold crash.
+- **AI batch analysis.** An **Analyze** button on the batch page opens a side drawer next to the charts. A Foundry agent grounded in a brewing playbook, BJCP style ranges and your yeast library reviews the batch history and recommends what to do next.
+- **Warning highlights.** Stat cards turn amber or red when temperature, gravity or attenuation leave the range expected for the batch's yeast and recipe.
+- **Recipe advisor.** On the New Batch screen, chat to get help choosing what to brew, grounded in your recipe and yeast libraries plus openly licensed public sources (PubMed Central, Wikipedia).
+- **Corrective recommendations** *(partly done)*. The analyst and highlights cover this today; rule-based anomaly detection and alerts are still planned.
 - **A library of batches and recipes.** Every batch is kept with its recipe, yeast and readings, so you can compare past brews and repeat the good ones. Recipes can be imported from a product page or PDF, and the yeast library carries vendor temperature and attenuation specs.
 
 ## What you need
@@ -42,7 +45,7 @@ See [architecture.md](architecture.md) for structure, key decisions, gotchas, pe
 | `infra/` | Idempotent provisioning (`provision.py`), config, eventstream template, KQL |
 | `models/BrewEvents/` | The semantic model `.pbix` (parameters `KustoQueryUri`, `KustoDatabase`) |
 | `notebooks/` | Notebook builders (simulator, recipe import) and the publisher |
-| `tools/` | Yeast scrapers/seed generator, history generator, import test runner |
+| `tools/` | Yeast scrapers/seed generator, history generator, import test runner, `foundry_agent/` (analyst and advisor agents, knowledge files), `analysis_eval/` (analyst benchmark) |
 
 ## Initial deployment
 
@@ -56,7 +59,7 @@ See [architecture.md](architecture.md) for structure, key decisions, gotchas, pe
 ### Steps
 1. **Configure.** Edit `infra/config.json` (resource group, region, IoT Hub, capacity, workspace names). Set `prefix` to something unique to you; it is applied to the globally unique names (IoT Hub, capacity). Non-secret values only.
 2. **Preview.** `python infra/provision.py all --dry-run`
-3. **Provision.** `python infra/provision.py all` (add `--capacity` to create the Fabric capacity). This creates the IoT Hub, device and consumer group; the Foundry resource, `brewiq` project and `brewiq-analyst` model deployment (and grants you the `Cognitive Services OpenAI User` role, then points the `analyzeBatch` function at it); the workspace, lakehouse, Eventhouse and `TiltEvents` table; the Fabric IoT Hub connection and eventstream; the two notebooks; and imports the semantic model, pointing it at the new Eventhouse and writing its ids into `brewiq-app/rayfin/rayfin.yml`. It is safe to re-run; existing items are skipped. The script prints the resulting ids at the end.
+3. **Provision.** `python infra/provision.py all` (add `--capacity` to create the Fabric capacity). This creates the IoT Hub, device and consumer group; the Foundry resource, `brewiq` project and `brewiq-analyst` model deployment (and grants you the `Foundry User` and `Cognitive Services OpenAI User` roles, then points the `analyzeBatch` function at it); the analyst and recipe-advisor agents with their knowledge vector stores; the workspace, lakehouse, Eventhouse and `TiltEvents` table; the Fabric IoT Hub connection and eventstream; the two notebooks; and imports the semantic model, pointing it at the new Eventhouse and writing its ids into `brewiq-app/rayfin/rayfin.yml`. It is safe to re-run; existing items are skipped. The script prints the resulting ids at the end.
 4. **Deploy the app.**
    ```
    cd brewiq-app
@@ -70,7 +73,7 @@ Details and options are in [infra/README.md](infra/README.md).
 ### Not scripted yet
 - Creating the Rayfin app backend itself is done by `rayfin up`.
 - The semantic model's refresh/credential uses your user token, so re-run `python infra/provision.py model` if it expires.
-- Foundry agents are not used; the analyst is a plain model deployment (see `python infra/provision.py foundry`). Model quota (GlobalStandard `gpt-6.1-terra`) must be available in the region.
+- The Foundry agents (`brewiq-analyst-agent`, `brewiq-advisor-agent`) are created by `python infra/provision.py agent` (part of `all`); if the agent is unavailable the analyst falls back to the plain model deployment. Model quota (GlobalStandard `gpt-6.1-terra`) must be available in the region.
 
 ## Day-to-day development
 ```
