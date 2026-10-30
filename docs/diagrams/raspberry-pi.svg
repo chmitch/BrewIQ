@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="110" viewBox="0 0 160 110" role="img" aria-labelledby="title description">
+  <title id="title">Schematic Raspberry Pi board</title>
+  <desc id="description">A green single-board computer with a GPIO header, processor, USB sockets and an Ethernet port. This is an original schematic illustration, not a model-specific board drawing.</desc>
+  <rect x="5" y="5" width="133" height="100" rx="9" fill="#15803d" stroke="#14532d" stroke-width="3"/>
+  <g fill="#fef3c7" stroke="#a16207" stroke-width="2">
+    <circle cx="15" cy="15" r="4"/>
+    <circle cx="127" cy="15" r="4"/>
+    <circle cx="15" cy="95" r="4"/>
+    <circle cx="127" cy="95" r="4"/>
+  </g>
+  <rect x="27" y="11" width="83" height="19" rx="2" fill="#17252a"/>
+  <path d="M33 16h71m-71 8h71" stroke="#fbbf24" stroke-width="4" stroke-dasharray="3 4"/>
+  <path d="M30 41h15v14m-19 6h19m43-21h17v18m-14 15h13m-72 7h15v9" fill="none" stroke="#4ade80" stroke-width="2"/>
+  <rect x="49" y="43" width="41" height="38" rx="3" fill="#1e293b" stroke="#94a3b8" stroke-width="2"/>
+  <rect x="58" y="51" width="23" height="21" rx="2" fill="#475569"/>
+  <g fill="#cbd5e1" stroke="#64748b" stroke-width="2">
+    <rect x="118" y="32" width="35" height="24" rx="2"/>
+    <rect x="118" y="61" width="35" height="24" rx="2"/>
+    <rect x="79" y="91" width="24" height="16" rx="2"/>
+    <rect x="1" y="70" width="13" height="20" rx="2"/>
+    <rect x="33" y="92" width="25" height="14" rx="2"/>
+  </g>
+  <path d="M124 38h22v12h-22Zm0 29h22v12h-22Z" fill="#1e293b"/>
+  <path d="M127 43h15m-15 29h15" stroke="#38bdf8" stroke-width="3"/>
+  <path d="M84 103v-7h14v7" fill="none" stroke="#475569" stroke-width="2"/>
+  <rect x="24" y="44" width="11" height="10" rx="1" fill="#cbd5e1"/>
+  <path d="M19 36h5m5 49h6m64 0h7" stroke="#fef3c7" stroke-width="3"/>
+</svg>

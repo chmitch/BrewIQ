@@ -17,6 +17,8 @@ Owner/user: chmitch. Everything lives in the user's own resources (resource grou
 
 ## 2. System overview
 
+For an executive-level visual of the telemetry, app data, recipe import and AI paths, see the [architecture diagram in the README](README.md#architecture-at-a-glance). Its [editable draw.io source](docs/diagrams/brewiq-overview.drawio) and [exported PNG](docs/diagrams/brewiq-overview.png) live in `docs\diagrams`. It uses draw.io's native Azure/Power Platform service icons and embedded official Fabric icons; generic symbols represent the app, app data and knowledge files without implying extra Azure resources. An illustrated hardware inset shows the Tilt inside a sealed conical fermenter (cutaway view), broadcasting over Bluetooth to a Raspberry Pi. An original bearded brewer avatar represents the signed-in user; all three original SVG illustrations are embedded in the diagram and kept alongside it for reuse. The flows below retain the component-level detail.
+
 ```
 Tilt device (simulated by Fabric notebook TiltEvent-Simulator)
   -> Azure IoT Hub (cgmbrewiq-iothub, device tiltsim, consumer group tiltstreaming)

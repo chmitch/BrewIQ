@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="240" viewBox="0 0 200 240" role="img" aria-labelledby="title description">
+  <title id="title">Sealed conical fermenter with a Tilt inside</title>
+  <desc id="description">An illustrative cutaway shows a red-capped Tilt floating in amber liquid inside a closed stainless-steel conical fermenter.</desc>
+  <defs>
+    <linearGradient id="steel" x1="0" x2="1">
+      <stop offset="0" stop-color="#94a3b8"/>
+      <stop offset="0.35" stop-color="#f8fafc"/>
+      <stop offset="0.68" stop-color="#e2e8f0"/>
+      <stop offset="1" stop-color="#94a3b8"/>
+    </linearGradient>
+    <linearGradient id="beer" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbbf24"/>
+      <stop offset="1" stop-color="#d97706"/>
+    </linearGradient>
+    <clipPath id="window">
+      <rect x="48" y="82" width="104" height="80" rx="12"/>
+    </clipPath>
+  </defs>
+  <g stroke="#64748b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M47 164 35 230M153 164 165 230" fill="none"/>
+    <path d="M27 230h17m113 0h17" fill="none"/>
+    <path d="M30 55v106l70 52 70-52V55Z" fill="url(#steel)"/>
+    <path d="M100 213v18h24" fill="none"/>
+    <path d="M115 224v14" stroke="#d97706"/>
+    <ellipse cx="100" cy="55" rx="70" ry="15" fill="url(#steel)"/>
+    <path d="M35 64q65 25 130 0" fill="none" stroke="#94a3b8" stroke-width="3"/>
+    <path d="M88 38v-9q12-9 24 0v9" fill="none"/>
+  </g>
+  <rect x="48" y="82" width="104" height="80" rx="12" fill="#fffbeb"/>
+  <g clip-path="url(#window)">
+    <path d="M48 110q26-7 52 0t52 0v55H48Z" fill="url(#beer)"/>
+    <g transform="rotate(-20 108 129)">
+      <rect x="97" y="101" width="22" height="55" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="2"/>
+      <path d="M97 118v-6a11 11 0 0 1 22 0v6Z" fill="#ef4444"/>
+      <path d="M100 118h16" stroke="#b91c1c" stroke-width="2"/>
+      <rect x="103" y="124" width="10" height="21" rx="2" fill="#cbd5e1"/>
+      <path d="M105 128h6m-6 5h6m-6 5h6" stroke="#64748b" stroke-width="1.5"/>
+    </g>
+  </g>
+  <rect x="48" y="82" width="104" height="80" rx="12" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5 4"/>
+  <text x="58" y="102" fill="#b91c1c" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700">TILT</text>
+  <path d="m88 99 10 8" fill="none" stroke="#b91c1c" stroke-width="1.5"/>
+</svg>

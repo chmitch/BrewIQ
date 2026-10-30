@@ -31,11 +31,19 @@ No hardware yet? The `TiltEvent-Simulator` notebook generates realistic Tilt eve
 
 Built on Azure and Microsoft Fabric. A Tilt hydrometer (or the included simulator) sends gravity and temperature to IoT Hub; an eventstream lands the events in an Eventhouse; a Power BI semantic model exposes them to a Rayfin (Fabric Apps) web app that manages batches, recipes and yeasts.
 
-```
-Tilt / simulator -> IoT Hub -> Eventstream -> Eventhouse (TiltEvents) -> Semantic model (BrewEvents) -> Rayfin app
-```
+### Architecture at a glance
 
-See [architecture.md](architecture.md) for structure, key decisions, gotchas, pending ideas and known issues.
+![BrewIQ architecture: a Tilt inside a conical fermenter sends readings over Bluetooth to a Raspberry Pi, then through Azure IoT Hub and Microsoft Fabric to the web app, with app data, recipe import and Foundry AI alongside it. A simulator provides an alternative telemetry source.](docs/diagrams/brewiq-overview.png)
+
+[Edit the diagram in draw.io](docs/diagrams/brewiq-overview.drawio). The PNG is a local draw.io export; re-export it after editing the source (PNG format, light theme, page size, 200% zoom).
+
+Service icons come from draw.io's Azure/Power Platform libraries and [Microsoft's official Fabric icon set](https://learn.microsoft.com/en-us/fabric/fundamentals/icons); Fabric SVGs are embedded in the editable source. Generic browser, table and file symbols do not imply additional Azure services. See [icon notices](docs/diagrams/THIRD-PARTY-NOTICES.txt).
+
+The hardware inset uses original [Raspberry Pi board](docs/diagrams/raspberry-pi.svg) and [conical fermenter with Tilt](docs/diagrams/fermenter-tilt.svg) illustrations, also embedded in the draw.io source. The fermenter is shown as a cutaway to make the sealed-in-vessel Tilt visible; the board is schematic, not model-specific. An original [brewer avatar](docs/diagrams/brewer-avatar.svg), also embedded, represents the signed-in user.
+
+The app brings live readings, batch records and AI advice into one signed-in experience. Telemetry stays in the Eventhouse; batches and the shared recipe/yeast library live in the app data layer. Imported recipes are reviewed by the brewer before saving. Foundry calls use the signed-in user's delegated token; the batch analyst can fall back to a direct model call if its agent is unavailable.
+
+This is the current implemented architecture, with real hardware shown as an alternative to the simulator. The diagram groups services for an executive overview and omits deployment tooling, simulator backfill and detailed authentication flows. See [architecture.md](architecture.md) for component-level flows, key decisions, gotchas, pending ideas and known issues.
 
 ## Repository layout
 

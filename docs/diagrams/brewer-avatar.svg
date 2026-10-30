@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="112" viewBox="0 0 96 112" role="img" aria-labelledby="title description">
+  <title id="title">Friendly bearded brewer</title>
+  <desc id="description">An original illustrated brewer avatar with a full brown beard, round glasses and an amber beanie.</desc>
+  <g stroke="#78350f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 110v-7q12-14 25-16l11 8 11-8q13 2 25 16v7" fill="#fbbf24"/>
+    <path d="m33 91 5 19m25-19-5 19" fill="none" stroke="#d97706"/>
+    <path d="M26 48q-9-3-7 9 1 8 8 8m43-17q9-3 7 9-1 8-8 8" fill="#fed7aa"/>
+    <path d="M25 35q0-20 23-20t23 20v30q-2 23-23 27-21-4-23-27Z" fill="#ffedd5"/>
+    <path d="M25 58q3 10 11 11l12-5 12 5q8-1 11-11v14q-1 20-23 29-22-9-23-29Z" fill="#6b4423"/>
+    <path d="M24 33v-7C24 12 34 5 48 5s24 7 24 21v7" fill="#b45309"/>
+    <path d="M34 12q-5 8-4 17m14-20-1 20m12-19 2 19m7-16q4 7 3 16" fill="none" stroke="#d97706" stroke-width="2"/>
+    <rect x="22" y="28" width="52" height="12" rx="4" fill="#f59e0b"/>
+    <path d="M29 32v4m7-4v4m7-4v4m7-4v4m7-4v4m7-4v4" stroke="#b45309" stroke-width="1.5"/>
+    <rect x="29" y="45" width="16" height="13" rx="6" fill="none" stroke="#44403c"/>
+    <rect x="51" y="45" width="16" height="13" rx="6" fill="none" stroke="#44403c"/>
+    <circle cx="37" cy="51" r="1.5" fill="#44403c" stroke="none"/>
+    <circle cx="59" cy="51" r="1.5" fill="#44403c" stroke="none"/>
+    <path d="M45 50h6m-26-2h4m38 0h4" fill="none" stroke="#44403c"/>
+    <path d="M47 54v8h5" fill="none" stroke="#c27c43" stroke-width="2"/>
+    <path d="M48 67q-9-9-17 2 9 4 17-1 8 5 17 1-8-11-17-2Z" fill="#6b4423" stroke-width="2"/>
+    <path d="M40 77q8 7 16 0" fill="none" stroke="#ffedd5" stroke-width="2.5"/>
+    <path d="M35 80q1 7 7 11m19-11q-1 7-7 11" fill="none" stroke="#a56a3e" stroke-width="2"/>
+  </g>
+</svg>
