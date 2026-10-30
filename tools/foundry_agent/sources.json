@@ -1,0 +1,38 @@
+{
+  "pmc": [
+    { "id": "PMC5916228", "topic": "yeast aroma formation (esters, higher alcohols, phenols)" },
+    { "id": "PMC6524682", "topic": "fruity and floral aromas from yeast" },
+    { "id": "PMC9329171", "topic": "yeast biotransformation of hop compounds" },
+    { "id": "PMC8310685", "topic": "lager fermentation flavor production" },
+    { "id": "PMC4383656", "topic": "British ale yeast flavor" },
+    { "id": "PMC11297104", "topic": "farmhouse (saison) yeasts" },
+    { "id": "PMC7162825", "topic": "diastatic yeast, hyperattenuation (saison)" },
+    { "id": "PMC6145013", "topic": "kveik yeast" },
+    { "id": "PMC10534726", "topic": "dry hopping review" },
+    { "id": "PMC10421000", "topic": "Azacca, Idaho-7, Sultana hop aroma" },
+    { "id": "PMC9407075", "topic": "Czech hop varieties in dry-hopped lager" },
+    { "id": "PMC10706553", "topic": "hop freshness in kettle-hopped beer" },
+    { "id": "PMC12552634", "topic": "malt type and roast degree" }
+  ],
+  "wikipedia": [
+    "Wheat beer",
+    "Hefeweizen",
+    "Saison",
+    "India pale ale",
+    "Bitter (beer)",
+    "Pale ale",
+    "Stout",
+    "Porter (beer)",
+    "Pilsner",
+    "Lager",
+    "Belgian beer",
+    "Hops",
+    "List of hop varieties",
+    "Cascade hop",
+    "Amarillo hops",
+    "Dry hopping",
+    "Malt",
+    "Esters",
+    "Kveik"
+  ]
+}

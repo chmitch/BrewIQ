@@ -213,6 +213,8 @@ udf.func(
 
 const FOUNDRY_ENDPOINT = 'https://cgmbrewiq-foundry.cognitiveservices.azure.com';
 const FOUNDRY_DEPLOYMENT = 'brewiq-analyst';
+const FOUNDRY_PROJECT_ENDPOINT = 'https://cgmbrewiq-foundry.services.ai.azure.com/api/projects/brewiq';
+const FOUNDRY_AGENT = 'brewiq-analyst-agent';
 const FOUNDRY_API_VERSION = '2025-04-01-preview';
 const MAX_BRIEF_LENGTH = 60_000;
 
@@ -237,6 +239,127 @@ type AnalyzeBatchResult =
 const SEVERITIES = ['info', 'warning', 'critical'];
 const HEALTHS = ['good', 'watch', 'problem'];
 
+function mapAnalysis(text: string, model: string): AnalyzeBatchResult {
+  let parsed: {
+    health?: string;
+    summary?: string;
+    findings?: Partial<AnalysisFinding>[];
+    next_check?: string;
+  };
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    return { ok: false, message: 'The analyst returned an unreadable answer.' };
+  }
+  return {
+    ok: true,
+    health: HEALTHS.includes(parsed.health ?? '')
+      ? (parsed.health as 'good' | 'watch' | 'problem')
+      : 'watch',
+    summary: String(parsed.summary ?? ''),
+    findings: (parsed.findings ?? []).slice(0, 10).map((f) => ({
+      title: String(f.title ?? ''),
+      severity: SEVERITIES.includes(f.severity ?? '')
+        ? (f.severity as AnalysisFinding['severity'])
+        : 'info',
+      evidence: String(f.evidence ?? ''),
+      recommendation: String(f.recommendation ?? ''),
+    })),
+    nextCheck: String(parsed.next_check ?? ''),
+    model,
+  };
+}
+
+const FOUNDRY_ADVISOR = 'brewiq-advisor-agent';
+const MAX_ADVISOR_MESSAGE = 2_000;
+
+type AdviseBrewResult = { ok: true; reply: string; responseId: string } | { ok: false; message: string };
+
+// Conversational recipe advisor. The conversation state lives in Foundry; the client passes back the
+// previous response id to continue a thread ('' starts a new one).
+udf.func(
+  'adviseBrew',
+  async (
+    ctx: RayfinContext<Record<string, never>, AudienceType.AzureAI>,
+    message: string,
+    previousResponseId: string,
+  ): Promise<AdviseBrewResult> => {
+    const text = message.trim();
+    if (!text) return { ok: false, message: 'Say what you are looking for.' };
+    if (text.length > MAX_ADVISOR_MESSAGE) return { ok: false, message: 'That message is too long.' };
+    if (previousResponseId && !/^[\w-]{1,200}$/.test(previousResponseId)) {
+      return { ok: false, message: 'The conversation reference is invalid.' };
+    }
+    const request = () =>
+      fetch(`${FOUNDRY_PROJECT_ENDPOINT}/openai/v1/responses`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${ctx.Tokens.AzureAI}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          input: text,
+          agent_reference: { type: 'agent_reference', name: FOUNDRY_ADVISOR },
+          ...(previousResponseId ? { previous_response_id: previousResponseId } : {}),
+        }),
+        signal: AbortSignal.timeout(60_000),
+      });
+    let res: Response;
+    try {
+      res = await request();
+      if (res.status === 429 || res.status >= 500) res = await request();
+    } catch {
+      return { ok: false, message: 'The advisor did not respond in time.' };
+    }
+    if (res.status === 403) return { ok: false, message: 'You do not have access to the recipe advisor.' };
+    if (res.status === 404) return { ok: false, message: 'The recipe advisor has not been set up yet.' };
+    if (!res.ok) return { ok: false, message: `The advisor returned ${res.status}.` };
+    const body = (await res.json()) as {
+      id?: string;
+      output?: { type?: string; content?: { text?: string }[] }[];
+    };
+    const reply = body.output
+      ?.filter((o) => o.type === 'message')
+      .flatMap((o) => o.content ?? [])
+      .map((c) => c.text ?? '')
+      .join('')
+      .trim();
+    if (!reply || !body.id) return { ok: false, message: 'The advisor returned an empty answer.' };
+    return { ok: true, reply, responseId: body.id };
+  },
+  [],
+);
+
+// Calls the Foundry agent (instructions + file-search knowledge). Returns null when the agent is
+// unavailable (not created, no permission, throttled) so the caller can fall back to the model.
+async function callAgent(token: string, briefJson: string): Promise<AnalyzeBatchResult | null> {
+  const request = () =>
+    fetch(`${FOUNDRY_PROJECT_ENDPOINT}/openai/v1/responses`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        input: `Analyze this batch brief. Reply with JSON only.\n${briefJson}`,
+        agent_reference: { type: 'agent_reference', name: FOUNDRY_AGENT },
+      }),
+      signal: AbortSignal.timeout(60_000),
+    });
+  try {
+    let res = await request();
+    if (res.status === 429 || res.status >= 500) res = await request();
+    if (!res.ok) return null;
+    const body = (await res.json()) as {
+      output?: { type?: string; content?: { text?: string }[] }[];
+    };
+    const text = body.output
+      ?.filter((o) => o.type === 'message')
+      .flatMap((o) => o.content ?? [])
+      .map((c) => c.text ?? '')
+      .join('');
+    if (!text) return null;
+    const result = mapAnalysis(text, FOUNDRY_AGENT);
+    return result.ok ? result : null;
+  } catch {
+    return null;
+  }
+}
+
 udf.func(
   'analyzeBatch',
   async (
@@ -252,9 +375,11 @@ udf.func(
       return { ok: false, message: 'The batch brief is not valid JSON.' };
     }
 
-    let res: Response;
-    try {
-      res = await fetch(
+    const agent = await callAgent(ctx.Tokens.AzureAI, briefJson);
+    if (agent) return agent;
+
+    const request = () =>
+      fetch(
         `${FOUNDRY_ENDPOINT}/openai/deployments/${FOUNDRY_DEPLOYMENT}/chat/completions?api-version=${FOUNDRY_API_VERSION}`,
         {
           method: 'POST',
@@ -273,6 +398,11 @@ udf.func(
           signal: AbortSignal.timeout(90_000),
         },
       );
+    let res: Response;
+    try {
+      res = await request();
+      // The service occasionally returns a transient 5xx or 429; one retry clears most of them.
+      if (res.status === 429 || res.status >= 500) res = await request();
     } catch {
       return { ok: false, message: 'The analyst did not respond in time.' };
     }
@@ -284,35 +414,7 @@ udf.func(
       model?: string;
       choices?: { message?: { content?: string } }[];
     };
-    let parsed: {
-      health?: string;
-      summary?: string;
-      findings?: Partial<AnalysisFinding>[];
-      next_check?: string;
-    };
-    try {
-      parsed = JSON.parse(body.choices?.[0]?.message?.content ?? '');
-    } catch {
-      return { ok: false, message: 'The analyst returned an unreadable answer.' };
-    }
-
-    return {
-      ok: true,
-      health: HEALTHS.includes(parsed.health ?? '')
-        ? (parsed.health as 'good' | 'watch' | 'problem')
-        : 'watch',
-      summary: String(parsed.summary ?? ''),
-      findings: (parsed.findings ?? []).slice(0, 10).map((f) => ({
-        title: String(f.title ?? ''),
-        severity: SEVERITIES.includes(f.severity ?? '')
-          ? (f.severity as AnalysisFinding['severity'])
-          : 'info',
-        evidence: String(f.evidence ?? ''),
-        recommendation: String(f.recommendation ?? ''),
-      })),
-      nextCheck: String(parsed.next_check ?? ''),
-      model: String(body.model ?? FOUNDRY_DEPLOYMENT),
-    };
+    return mapAnalysis(body.choices?.[0]?.message?.content ?? '', String(body.model ?? FOUNDRY_DEPLOYMENT));
   },
   [],
 );

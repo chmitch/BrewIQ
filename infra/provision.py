@@ -275,6 +275,7 @@ def model(ids):
 ARM = "https://management.azure.com"
 FOUNDRY_API = "2025-06-01"
 FOUNDRY_ROLE = "Cognitive Services OpenAI User"
+FOUNDRY_AGENT_ROLE = "Foundry User"
 
 
 def arm(method, url, body=None):
@@ -341,21 +342,26 @@ def foundry():
                 time.sleep(10)
 
     # The analyzeBatch function calls Foundry as the signed-in user, so each user needs this role.
+    # The agent additionally needs 'Foundry User' (agents data actions).
     rc, me = az("ad", "signed-in-user", "show", "--query", "id", "-o", "tsv")
     if rc == 0 and me:
-        rc, have = az("role", "assignment", "list", "--assignee", me, "--scope", acct, "--role", FOUNDRY_ROLE,
-                      "--query", "[].id", "-o", "tsv")
-        if not have:
-            say(f"grant '{FOUNDRY_ROLE}' on {f['name']} to the signed-in user")
-            if not DRY:
-                az("role", "assignment", "create", "--assignee-object-id", me, "--assignee-principal-type", "User",
-                   "--role", FOUNDRY_ROLE, "--scope", acct, check=True)
+        for role in (FOUNDRY_ROLE, FOUNDRY_AGENT_ROLE):
+            rc, have = az("role", "assignment", "list", "--assignee", me, "--scope", acct, "--role", role,
+                          "--query", "[].id", "-o", "tsv")
+            if not have:
+                say(f"grant '{role}' on {f['name']} to the signed-in user")
+                if not DRY:
+                    az("role", "assignment", "create", "--assignee-object-id", me, "--assignee-principal-type", "User",
+                       "--role", role, "--scope", acct, check=True)
 
     path = ROOT / "brewiq-app" / "packages" / "functions" / "src" / "function_app.ts"
     endpoint = f"https://{f['name']}.cognitiveservices.azure.com"
     src = path.read_bytes().decode("utf-8")
     out = re.sub(r"(const FOUNDRY_ENDPOINT = ')[^']*(';)", lambda m: m.group(1) + endpoint + m.group(2), src)
     out = re.sub(r"(const FOUNDRY_DEPLOYMENT = ')[^']*(';)", lambda m: m.group(1) + f["deployment"] + m.group(2), out)
+    project_endpoint = f"https://{f['name']}.services.ai.azure.com/api/projects/{f['project']}"
+    out = re.sub(r"(const FOUNDRY_PROJECT_ENDPOINT = ')[^']*(';)", lambda m: m.group(1) + project_endpoint + m.group(2), out)
+    out = re.sub(r"(const FOUNDRY_AGENT = ')[^']*(';)", lambda m: m.group(1) + f.get("agent", "brewiq-analyst-agent") + m.group(2), out)
     if out != src:
         say(f"point analyzeBatch at {endpoint} ({f['deployment']})")
         if not DRY:
@@ -364,20 +370,40 @@ def foundry():
     return {"foundryEndpoint": endpoint}
 
 
+def agent(prefix):
+    """Knowledge vector stores, the analyst agent and the recipe advisor. Needs the function packages built."""
+    say("create the knowledge vector store and the analyst agent (tools/foundry_agent/agent.py)")
+    say("fetch open-license sources and create the recipe advisor (fetch_sources.py, advisor.py)")
+    if DRY:
+        return
+    tools = ROOT / "tools" / "foundry_agent"
+    for script in ("agent.py", "advisor.py"):
+        cmd = [sys.executable, str(tools / script), "--prefix", prefix]
+        if script == "advisor.py" and not (tools / "knowledge" / "sources").exists():
+            if subprocess.run([sys.executable, str(tools / "fetch_sources.py")]).returncode != 0:
+                sys.exit("fetch_sources step failed")
+        if subprocess.run(cmd).returncode != 0:
+            sys.exit(f"{script} step failed")
+
+
 def main():
     global DRY
     p = argparse.ArgumentParser()
-    p.add_argument("step", nargs="?", default="all", choices=["azure", "foundry", "fabric", "notebooks", "model", "all"])
+    p.add_argument("step", nargs="?", default="all", choices=["azure", "foundry", "agent", "fabric", "notebooks", "model", "all"])
     p.add_argument("--capacity", action="store_true", help="also create the Fabric capacity")
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--prefix", help="override config.json prefix (lowercase letters/digits)")
     a = p.parse_args()
     DRY = a.dry_run
-    apply_prefix(a.prefix if a.prefix is not None else CFG.get("prefix", ""))
+    prefix = a.prefix if a.prefix is not None else CFG.get("prefix", "")
+    apply_prefix(prefix)
     if a.step in ("azure", "all"):
         azure()
     if a.step in ("foundry", "all"):
         foundry()
+        agent(prefix)
+    if a.step == "agent":
+        agent(prefix)
     if a.capacity:
         capacity()
     ids = {}

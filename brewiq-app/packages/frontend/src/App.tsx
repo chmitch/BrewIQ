@@ -13,6 +13,7 @@ import { BatchDashboard } from './components/BatchDashboard';
 import { BatchList } from './components/BatchList';
 import { yeastLabel } from './lib/yeast-format';
 import { NewBatchForm } from './components/NewBatchForm';
+import { RecipeAdvisor } from './components/RecipeAdvisor';
 import { RecipeImport } from './components/RecipeImport';
 import { RecipesView } from './components/RecipesView';
 import { ErrorState, LoadingState } from './components/states';
@@ -30,6 +31,7 @@ function App() {
   const [openId, setOpenId] = useState<string | null>(null);
   const [view, setView] = useState<'batches' | 'recipes' | 'new'>('batches');
   const [recalcError, setRecalcError] = useState<string | null>(null);
+  const [picked, setPicked] = useState<{ id: string; n: number } | undefined>();
   const [recalculating, setRecalculating] = useState(false);
   const open = crud.items.find((b) => b.id === openId) ?? null;
 
@@ -115,7 +117,7 @@ function App() {
             recalculating={recalculating}
           />
         ) : view === 'new' ? (
-          <div className="mx-auto max-w-2xl space-y-300">
+          <div className="mx-auto max-w-5xl space-y-300">
             <button
               type="button"
               onClick={() => setView('batches')}
@@ -123,12 +125,19 @@ function App() {
             >
               <ArrowLeft className="icon-size-200" /> Batches
             </button>
-            <NewBatchForm
-              onCreate={crud.createBatch}
-              disabled={crud.pending}
-              library={library}
-              onCreated={() => setView('batches')}
-            />
+            <div className="grid grid-cols-1 items-start gap-500 lg:grid-cols-2">
+              <RecipeAdvisor
+                library={library}
+                onPickRecipe={(id) => setPicked((p) => ({ id, n: (p?.n ?? 0) + 1 }))}
+              />
+              <NewBatchForm
+                onCreate={crud.createBatch}
+                disabled={crud.pending}
+                library={library}
+                onCreated={() => setView('batches')}
+                picked={picked}
+              />
+            </div>
           </div>
         ) : view === 'recipes' ? (
           <div className="grid grid-cols-1 gap-600 lg:grid-cols-3">

@@ -35,6 +35,28 @@
      14
     ]
    },
+   "styleGuide": {
+    "code": "18B",
+    "name": "American Pale Ale",
+    "og": [
+     1.045,
+     1.06
+    ],
+    "fg": [
+     1.01,
+     1.015
+    ],
+    "abv": [
+     4.5,
+     6.2
+    ],
+    "ibu": [
+     30,
+     50
+    ],
+    "ogVsStyle": "within",
+    "fgVsStyle": "within"
+   },
    "gravity": {
     "og": 1.052,
     "current": 1.011,
@@ -717,6 +739,28 @@
      7,
      14
     ]
+   },
+   "styleGuide": {
+    "code": "18B",
+    "name": "American Pale Ale",
+    "og": [
+     1.045,
+     1.06
+    ],
+    "fg": [
+     1.01,
+     1.015
+    ],
+    "abv": [
+     4.5,
+     6.2
+    ],
+    "ibu": [
+     30,
+     50
+    ],
+    "ogVsStyle": "within",
+    "fgVsStyle": null
    },
    "gravity": {
     "og": 1.052,
@@ -1411,6 +1455,28 @@
      14
     ]
    },
+   "styleGuide": {
+    "code": "18B",
+    "name": "American Pale Ale",
+    "og": [
+     1.045,
+     1.06
+    ],
+    "fg": [
+     1.01,
+     1.015
+    ],
+    "abv": [
+     4.5,
+     6.2
+    ],
+    "ibu": [
+     30,
+     50
+    ],
+    "ogVsStyle": "within",
+    "fgVsStyle": "below"
+   },
    "gravity": {
     "og": 1.052,
     "current": 1.009,
@@ -1467,6 +1533,11 @@
      "code": "OFTEN_OUT_OF_RANGE",
      "severity": "warning",
      "evidence": "85.3% of the batch was outside the yeast range (0.0 h cold, 145.0 h hot)."
+    },
+    {
+     "code": "FG_OUTSIDE_STYLE",
+     "severity": "info",
+     "evidence": "Final gravity 1.009 is below the 18B American Pale Ale range of 1.010-1.015."
     }
    ],
    "series": [
@@ -2109,6 +2180,28 @@
      14
     ]
    },
+   "styleGuide": {
+    "code": "18B",
+    "name": "American Pale Ale",
+    "og": [
+     1.045,
+     1.06
+    ],
+    "fg": [
+     1.01,
+     1.015
+    ],
+    "abv": [
+     4.5,
+     6.2
+    ],
+    "ibu": [
+     30,
+     50
+    ],
+    "ogVsStyle": "within",
+    "fgVsStyle": null
+   },
    "gravity": {
     "og": 1.052,
     "current": 1.052,
@@ -2614,6 +2707,28 @@
      7,
      14
     ]
+   },
+   "styleGuide": {
+    "code": "18B",
+    "name": "American Pale Ale",
+    "og": [
+     1.045,
+     1.06
+    ],
+    "fg": [
+     1.01,
+     1.015
+    ],
+    "abv": [
+     4.5,
+     6.2
+    ],
+    "ibu": [
+     30,
+     50
+    ],
+    "ogVsStyle": "within",
+    "fgVsStyle": "within"
    },
    "gravity": {
     "og": 1.052,
@@ -3298,6 +3413,28 @@
      14
     ]
    },
+   "styleGuide": {
+    "code": "18B",
+    "name": "American Pale Ale",
+    "og": [
+     1.045,
+     1.06
+    ],
+    "fg": [
+     1.01,
+     1.015
+    ],
+    "abv": [
+     4.5,
+     6.2
+    ],
+    "ibu": [
+     30,
+     50
+    ],
+    "ogVsStyle": "within",
+    "fgVsStyle": "below"
+   },
    "gravity": {
     "og": 1.052,
     "current": 1.006,
@@ -3344,6 +3481,11 @@
      "code": "OVER_ATTENUATED",
      "severity": "info",
      "evidence": "Attenuation is 88.6%, above the yeast's 78-82% range."
+    },
+    {
+     "code": "FG_OUTSIDE_STYLE",
+     "severity": "info",
+     "evidence": "Final gravity 1.006 is below the 18B American Pale Ale range of 1.010-1.015."
     }
    ],
    "series": [

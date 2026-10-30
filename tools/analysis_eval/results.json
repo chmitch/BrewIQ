@@ -2,139 +2,135 @@
  {
   "model": "bench-gpt-6.1-terra",
   "scenario": "healthy-complete",
-  "seconds": 5.4,
-  "prompt_tokens": 5058,
-  "completion_tokens": 315,
-  "reasoning_tokens": 158,
+  "seconds": 5.9,
+  "prompt_tokens": 7366,
+  "completion_tokens": 270,
+  "reasoning_tokens": 65,
   "valid_json": true,
   "output": {
    "health": "good",
-   "summary": "Fermentation appears complete, with gravity in the expected final range and stable for several days. The beer is ready to package when you are satisfied with its condition.",
+   "summary": "Fermentation appears complete at the expected final gravity. The beer has had several days at a suitable temperature for cleanup.",
    "findings": [
     {
      "title": "Final gravity reached",
      "severity": "info",
-     "evidence": "Gravity has remained around 1.010\u20131.011 since July 10; current gravity is 1.011 against an expected range of 1.009\u20131.011. Apparent attenuation is 79.5%, within the yeast's 78\u201382% range.",
-     "recommendation": "Package when ready, using your normal carbonation procedure."
+     "evidence": "Gravity has stayed around 1.010\u20131.011 since July 10; the expected range is 1.009\u20131.011. Attenuation is 79.5%, within the yeast's 78\u201382% range, and temperature stayed within 59\u201375\u00b0F.",
+     "recommendation": "If aroma and taste are clean, you can cold crash or package. If you notice buttery character, leave the beer on the yeast a little longer before packaging."
     }
    ],
-   "next_check": "Before packaging, assess aroma and taste for any unwanted flavors."
+   "next_check": "Before packaging, look for a continued stable Tilt trend and check for buttery aroma or taste."
   }
  },
  {
   "model": "bench-gpt-6.1-terra",
   "scenario": "stalled-cold",
-  "seconds": 6.4,
-  "prompt_tokens": 5157,
-  "completion_tokens": 524,
-  "reasoning_tokens": 262,
+  "seconds": 7.1,
+  "prompt_tokens": 7464,
+  "completion_tokens": 406,
+  "reasoning_tokens": 159,
   "valid_json": true,
   "output": {
    "health": "problem",
-   "summary": "Fermentation appears stalled well above the expected final gravity, likely slowed by prolonged cold temperatures. Warm the fermenter and allow more time before packaging.",
+   "summary": "Fermentation appears stalled well above the expected final gravity. Extended cold conditions are a likely cause.",
    "findings": [
     {
-     "title": "Fermentation stalled at high gravity",
+     "title": "Stalled fermentation in cold conditions",
      "severity": "warning",
-     "evidence": "Gravity has remained at 1.027 in the series since July 6 at 17:00; expected final gravity is 1.009\u20131.011. Attenuation is 48.5%, versus the yeast's 78\u201382% range.",
-     "recommendation": "Do not package yet. After warming, watch for gravity to resume falling; if it remains flat, gently swirl the sealed fermenter to resuspend yeast, review the pitch history, and consider repitching healthy US-05."
-    },
-    {
-     "title": "Temperature below yeast range",
-     "severity": "warning",
-     "evidence": "Current temperature is 57.1\u00b0F, below the 59\u201375\u00b0F yeast range; 131 hours were below range.",
-     "recommendation": "Gradually warm the fermenter to around 66\u00b0F and hold it there while fermentation resumes."
+     "evidence": "Gravity has remained around 1.027 for more than two days, versus an expected FG of 1.009\u20131.011. The beer spent 131 hours below the yeast's 59\u201375\u00b0F range; the reported current temperature is 57.1\u00b0F.",
+     "recommendation": "Gradually warm the beer to around 65\u00b0F, then gently swirl the closed fermenter without splashing. Watch the Tilt trend for 24\u201348 hours; if gravity remains flat above expected FG, repitch fresh, healthy yeast. Do not crash or package yet."
     }
    ],
-   "next_check": "Check the gravity trend and temperature 48 hours after warming; look for a sustained gravity drop before considering packaging."
+   "next_check": "Check the Tilt gravity trend 24\u201348 hours after warming and rousing. Once gravity is near expected FG, leave it on the yeast until stable for 2\u20133 days and allow cleanup before packaging."
   }
  },
  {
   "model": "bench-gpt-6.1-terra",
   "scenario": "hot-fast",
-  "seconds": 5.3,
-  "prompt_tokens": 5198,
-  "completion_tokens": 357,
-  "reasoning_tokens": 145,
+  "seconds": 10.4,
+  "prompt_tokens": 7552,
+  "completion_tokens": 762,
+  "reasoning_tokens": 394,
   "valid_json": true,
   "output": {
    "health": "watch",
-   "summary": "Gravity is near the expected finish, but the fermentation has spent much of its time above the yeast's temperature range. The heat and repeated swings may affect flavor.",
+   "summary": "Gravity is near the expected finish, but fermentation has spent substantial time too warm. Bring the temperature down gently and allow cleanup before packaging.",
    "findings": [
     {
-     "title": "Prolonged high and fluctuating temperature",
+     "title": "Sustained high and fluctuating temperature",
      "severity": "warning",
-     "evidence": "The reported current temperature is 80.4\u00b0F, above the 75\u00b0F yeast ceiling. The batch spent 145 hours above range, and the last 24 hours ranged from 74.7\u00b0F to 83.6\u00b0F.",
-     "recommendation": "Gradually cool the fermenter into the yeast's range and keep it steady. At packaging, assess the beer for fruity or hot alcohol flavors."
+     "evidence": "The reported current temperature is 80.4\u00b0F, versus the yeast range of 59\u201375\u00b0F; the latest series point is 81.9\u00b0F. Temperature was above range for 145 hours and ranged from 74.7\u201383.6\u00b0F in the last 24 hours.",
+     "recommendation": "Gradually cool the fermenter into the yeast range and keep it steady, using a controlled cooler or lower ambient temperature. Warm fermentation can cause fruity or solvent-like flavors, though the readings cannot establish whether they are present."
+    },
+    {
+     "title": "Near final gravity; allow cleanup",
+     "severity": "info",
+     "evidence": "Gravity is 1.009, within the expected 1.009\u20131.011 range, and the series has stayed around 1.009\u20131.010 since July 6. Attenuation is 81.9%, within the yeast's 78\u201382% range.",
+     "recommendation": "Hold within the yeast temperature range for another 2 days and watch the Tilt trend. Package or cold-crash only if gravity remains stable and cleanup has passed."
     }
    ],
-   "next_check": "Review the temperature and Tilt gravity over the next 24\u201348 hours; package once gravity remains steady and the beer is ready."
+   "next_check": "Check temperature as it cools, then review the Tilt gravity trend over the next 2 days; assess aroma and flavor for warm-fermentation or buttery notes before packaging."
   }
  },
  {
   "model": "bench-gpt-6.1-terra",
   "scenario": "never-started",
-  "seconds": 5.8,
-  "prompt_tokens": 3820,
-  "completion_tokens": 405,
-  "reasoning_tokens": 189,
+  "seconds": 6.9,
+  "prompt_tokens": 6127,
+  "completion_tokens": 436,
+  "reasoning_tokens": 103,
   "valid_json": true,
   "output": {
    "health": "problem",
-   "summary": "Fermentation appears not to have started after 3.3 days. The temperature is within the yeast\u2019s range, but the nearly unchanged gravity warrants action.",
+   "summary": "Fermentation has shown almost no gravity drop after 3.3 days, well beyond a normal lag. The temperature is within the yeast\u2019s range but near its cool end; pitch rate or yeast viability may also be factors.",
    "findings": [
     {
-     "title": "Little sign of fermentation",
-     "severity": "warning",
-     "evidence": "Gravity is 1.052, matching the reported OG, with a 0.2-point change over 72 hours. Current temperature is 62.4\u00b0F, within the yeast\u2019s 59\u201375\u00b0F range.",
-     "recommendation": "Check when and how the yeast was pitched and look for krausen. Gently warm the fermenter within the yeast\u2019s range; if yeast was pitched at the start, repitch fresh yeast promptly. Do not package yet."
+     "title": "Fermentation has not meaningfully started",
+     "severity": "critical",
+     "evidence": "Gravity is 1.052, essentially unchanged from the 1.052 OG, versus an expected FG near 1.010. Temperature has averaged 62\u00b0F, within the yeast\u2019s 59\u201375\u00b0F range.",
+     "recommendation": "Check pitch history and look for krausen. If yeast was not pitched, pitch fresh yeast now. Otherwise, gradually warm toward the middle of the yeast\u2019s range and gently swirl without splashing. Watch the Tilt trend for 24\u201348 hours; if gravity remains flat, repitch fresh, healthy yeast. Do not crash or package."
+    },
+    {
+     "title": "Isolated outliers",
+     "severity": "info",
+     "evidence": "One gravity reading of 1.066 and one temperature reading of 71.5\u00b0F were flagged as anomalies.",
+     "recommendation": "Treat these isolated readings as likely noise unless similar outliers repeat; follow the overall Tilt trend."
     }
    ],
-   "next_check": "Review the gravity trend and look for krausen over the next 24 hours, especially after repitching."
+   "next_check": "Review the Tilt gravity trend in 24\u201348 hours after warming and rousing; repitch if it remains flat."
   }
  },
  {
   "model": "bench-gpt-6.1-terra",
   "scenario": "cold-crash-candidate",
-  "seconds": 4.7,
-  "prompt_tokens": 5065,
-  "completion_tokens": 237,
-  "reasoning_tokens": 75,
-  "valid_json": true,
-  "output": {
-   "health": "good",
-   "summary": "Fermentation appears complete at the expected final gravity. The beer is ready to package when you\u2019re satisfied with its flavor.",
-   "findings": [
-    {
-     "title": "Expected final gravity reached",
-     "severity": "info",
-     "evidence": "Gravity is 1.010, matching the expected midpoint, with a 0.2-point decrease over the last 72 hours. Attenuation is 80.6%.",
-     "recommendation": "Package the beer when its flavor is ready, using your usual carbonation procedure."
-    }
-   ],
-   "next_check": "At packaging, assess the beer\u2019s aroma and flavor for readiness."
-  }
+  "error": "429 {\n  \"error\": {\n    \"message\": \"Your requests to gpt-6.1-terra for bench-gpt-6.1-terra in centralus have exceeded token rate limit.\",\n    \"type\": \"too_many_requests\",\n    \"param\": null,\n    \"code\": \"rate_limit_exceeded\"\n  }\n}",
+  "seconds": 3.0
  },
  {
   "model": "bench-gpt-6.1-terra",
   "scenario": "over-attenuating",
-  "seconds": 5.4,
-  "prompt_tokens": 5095,
-  "completion_tokens": 389,
-  "reasoning_tokens": 161,
+  "seconds": 7.2,
+  "prompt_tokens": 7450,
+  "completion_tokens": 497,
+  "reasoning_tokens": 116,
   "valid_json": true,
   "output": {
    "health": "watch",
-   "summary": "The beer is drier than expected, and gravity has continued to drift down slowly. Give it more time before packaging rather than assuming fermentation is complete.",
+   "summary": "The beer is drier than expected, and the recent gravity trend does not yet establish that fermentation is finished. Hold off packaging while the Tilt trend settles.",
    "findings": [
     {
-     "title": "High attenuation with a slow gravity decline",
+     "title": "Low gravity with continued drift",
      "severity": "warning",
-     "evidence": "Gravity fell from 1.010 on July 9 to 1.006 on July 19, below the expected 1.009\u20131.011 range. Attenuation is 88.6%, versus the yeast's 78\u201382% range.",
-     "recommendation": "Keep the beer at its current fermentation temperature and wait for a sustained gravity plateau before packaging. Review the recipe and pitch history for a highly fermentable wort or mixed yeast; the readings alone do not establish contamination."
+     "evidence": "Gravity is 1.006 versus an expected 1.009\u20131.011, with 88.6% attenuation versus the yeast's 78\u201382% range. It fell 1.2 points over 72 hours after an earlier plateau around 1.010. Temperature stayed within the yeast's range at 66.5\u201369.5\u00b0F.",
+     "recommendation": "Keep the beer on the yeast at its current temperature and wait for a flat Tilt trend for 2\u20133 days before cold crashing or packaging. Review the mash temperature and sugar additions: a highly fermentable recipe could explain the dryness. Continued decline after the earlier plateau can also indicate contamination, though gravity alone cannot confirm it; look for a film or unusual aroma if visible without opening the fermenter."
+    },
+    {
+     "title": "Drier than the style range",
+     "severity": "info",
+     "evidence": "Gravity of 1.006 is below the American Pale Ale range of 1.010\u20131.015.",
+     "recommendation": "Expect a potentially lighter, drier finish; compare it with your intended recipe rather than treating the style range as a defect. Kit recipes can fall outside style ranges."
     }
    ],
-   "next_check": "Review the gravity trend over the next 2\u20133 days; package only once it has stopped declining. Note any unusual aroma."
+   "next_check": "Watch the Tilt trend over the next 2\u20133 days. If gravity continues to fall, keep waiting before packaging and look for signs of contamination."
   }
  }
 ]

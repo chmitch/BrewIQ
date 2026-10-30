@@ -39,6 +39,18 @@ describe('buildBatchBrief', () => {
     expect(codes(b)).toEqual(['FG_REACHED']);
   });
 
+  it('compares a settled batch with its BJCP style range', () => {
+    const recipe = { name: 'Kit', style: 'American Pale Ale' };
+    const b = brief(series(300, healthy, () => 67), { recipe });
+    expect(b.styleGuide?.code).toBe('18B');
+    expect(b.styleGuide?.fgVsStyle).toBe('within');
+    expect(codes(b)).not.toContain('FG_OUTSIDE_STYLE');
+    const dry = brief(series(300, (h) => (h < 12 ? 1.05 : 1.003), () => 67), { recipe });
+    expect(dry.styleGuide?.fgVsStyle).toBe('below');
+    expect(codes(dry)).toContain('FG_OUTSIDE_STYLE');
+    expect(brief(series(300, healthy, () => 67), { recipe: { name: 'x', style: 'Mystery Brew' } }).styleGuide).toBeNull();
+  });
+
   it('flags a stall when gravity stops well above the expected FG', () => {
     const stalled = (h: number) => (h < 96 ? 1.05 - (0.02 * h) / 96 : 1.03);
     const b = brief(series(200, stalled, () => 67));

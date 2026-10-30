@@ -38,6 +38,10 @@ export type AppFunctionsSchema = {
         }
       | { ok: false; message: string };
   };
+  adviseBrew: {
+    input: { message: string; previousResponseId: string };
+    output: { ok: true; reply: string; responseId: string } | { ok: false; message: string };
+  };
   getImport: {
     input: { jobId: string };
     output: { status: 'running' } | { status: 'error'; error: string } | { status: 'ok'; recipeJson: string };

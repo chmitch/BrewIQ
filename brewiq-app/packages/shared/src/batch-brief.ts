@@ -6,6 +6,8 @@
  * Gravity is in specific gravity (1.050), temperature in degrees F.
  */
 
+import { findBeerStyle } from './beer-styles.js';
+
 const HOUR = 3_600_000;
 const SERIES_POINTS = 120;
 
@@ -68,7 +70,7 @@ export interface BatchBrief {
   batch: {
     name: string;
     style: string | null;
-    status: 'active' | 'completed';
+    status: 'active' | 'likely-complete' | 'completed';
     startedAt: string;
     elapsedDays: number;
     readings: number;
@@ -87,6 +89,17 @@ export interface BatchBrief {
     ogTarget: number | null;
     abvPct: number | null;
     primaryDays: [number, number] | null;
+  } | null;
+  /** BJCP 2021 vital statistics for the recipe's style, and where this batch sits against them. */
+  styleGuide: {
+    code: string;
+    name: string;
+    og: [number, number] | null;
+    fg: [number, number] | null;
+    abv: [number, number] | null;
+    ibu: [number, number] | null;
+    ogVsStyle: 'below' | 'within' | 'above' | null;
+    fgVsStyle: 'below' | 'within' | 'above' | null;
   } | null;
   gravity: {
     og: number | null;
@@ -211,6 +224,14 @@ export function buildBatchBrief(input: BriefInput): BatchBrief {
   const status: BatchBrief['temperature']['status'] =
     !tempRange || now6 == null ? 'unknown' : now6 < tempRange[0] ? 'below' : now6 > tempRange[1] ? 'above' : 'in-range';
 
+  // Style guide
+  const style = recipe?.style ? findBeerStyle(recipe.style) : undefined;
+  const vs = (v: number | null, r: [number, number] | null | undefined): 'below' | 'within' | 'above' | null =>
+    v == null || !r ? null : v < r[0] - 0.0005 ? 'below' : v > r[1] + 0.0005 ? 'above' : 'within';
+  const settled = phase === 'stable' || (!!batch.endDate && current != null);
+  const ogVsStyle = vs(baseOg, style?.og);
+  const fgVsStyle = settled ? vs(current, style?.fg) : null;
+
   // Anomalies
   const anomalies = input.anomalies ?? [];
   const gAn = anomalies.filter((a) => a.metric === 'gravity').length;
@@ -239,11 +260,11 @@ export function buildBatchBrief(input: BriefInput): BatchBrief {
   if (attenuationPct != null && attRange && attenuationPct > attRange[1] + 3) {
     add('OVER_ATTENUATED', 'info', `Attenuation is ${f1(attenuationPct)}%, above the yeast's ${attRange[0]}-${attRange[1]}% range.`);
   }
-  if (status === 'above' && tempRange && now6 != null) {
+  if (!batch.endDate && status === 'above' && tempRange && now6 != null) {
     add(now6 - tempRange[1] > 4 ? 'TEMP_TOO_HIGH' : 'TEMP_HIGH', now6 - tempRange[1] > 4 ? 'critical' : 'warning',
       `Temperature is about ${f1(now6)} F, ${f1(now6 - tempRange[1])} F above the yeast ceiling of ${tempRange[1]} F.`);
   }
-  if (status === 'below' && tempRange && now6 != null) {
+  if (!batch.endDate && status === 'below' && tempRange && now6 != null) {
     add(tempRange[0] - now6 > 4 ? 'TEMP_TOO_LOW' : 'TEMP_LOW', tempRange[0] - now6 > 4 ? 'critical' : 'warning',
       `Temperature is about ${f1(now6)} F, ${f1(tempRange[0] - now6)} F below the yeast floor of ${tempRange[0]} F.`);
   }
@@ -255,6 +276,9 @@ export function buildBatchBrief(input: BriefInput): BatchBrief {
   }
   if (recipe?.primaryDaysMax && elapsedH / 24 > recipe.primaryDaysMax && phase !== 'stable' && !batch.endDate) {
     add('LONGER_THAN_EXPECTED', 'info', `Day ${f1(elapsedH / 24)}; the recipe expects primary fermentation to take up to ${recipe.primaryDaysMax} days.`);
+  }
+  if (style && current != null && fgVsStyle && fgVsStyle !== 'within' && style.fg) {
+    add('FG_OUTSIDE_STYLE', 'info', `Final gravity ${sg(current)} is ${fgVsStyle} the ${style.code} ${style.name} range of ${sg(style.fg[0])}-${sg(style.fg[1])}.`);
   }
   if (anomalies.length) {
     add('ANOMALIES', 'info', `${anomalies.length} anomalous reading(s): ${gAn} gravity, ${tAn} temperature. Likely sensor noise unless they repeat.`);
@@ -268,7 +292,7 @@ export function buildBatchBrief(input: BriefInput): BatchBrief {
     batch: {
       name: batch.name,
       style: recipe?.style ?? null,
-      status: batch.endDate ? 'completed' : 'active',
+      status: batch.endDate ? 'completed' : phase === 'stable' ? 'likely-complete' : 'active',
       startedAt: batch.startDate.toISOString(),
       elapsedDays: round(elapsedH / 24, 1)!,
       readings: rs.length,
@@ -292,6 +316,9 @@ export function buildBatchBrief(input: BriefInput): BatchBrief {
           primaryDays:
             recipe.primaryDaysMin != null && recipe.primaryDaysMax != null ? [recipe.primaryDaysMin, recipe.primaryDaysMax] : null,
         }
+      : null,
+    styleGuide: style
+      ? { code: style.code, name: style.name, og: style.og, fg: style.fg, abv: style.abv, ibu: style.ibu, ogVsStyle, fgVsStyle }
       : null,
     gravity: {
       og: round(og, 3),

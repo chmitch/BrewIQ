@@ -55,6 +55,7 @@ SINGLE_BATCH = True              # simulate one batch (batch 0 for this SEED) an
 
 # Start mid-batch: pretend the first batch started this many hours ago
 BATCH_ELAPSED_HOURS = 0
+BATCH_START_UTC = ""             # exact batch start, e.g. "2026-10-24T14:27:00+00:00"; overrides BATCH_ELAPSED_HOURS when set
 BACKFILL_TARGET = "eventhouse"   # how elapsed events (mid-batch start, or downtime since the checkpoint) are handled:
                                  # "eventhouse" = write them directly | "iothub" = replay them through the hub | "none" = skip them
 FAST_FORWARD_MIN_EVENTS = 5      # gaps smaller than this are just caught up through the hub
@@ -285,7 +286,7 @@ def init_checkpoint():
               f"(start {cp['start_time']}, {cp['total_sent']} events sent, last checkpoint {cp.get('updated_utc')})")
         return cp
     now = datetime.now(timezone.utc).replace(second=0, microsecond=0)
-    start = now - timedelta(hours=BATCH_ELAPSED_HOURS)
+    start = datetime.fromisoformat(BATCH_START_UTC) if BATCH_START_UTC else now - timedelta(hours=BATCH_ELAPSED_HOURS)
     cp = {"run_id": RUN_ID, "model_hash": MODEL_HASH, "start_time": start.isoformat(),
           "next_seq": 0, "total_sent": 0, "last_eventtime": None, "status": "running"}
     save_checkpoint(cp)

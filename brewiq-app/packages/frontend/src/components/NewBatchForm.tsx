@@ -18,11 +18,14 @@ export function NewBatchForm({
   disabled,
   library,
   onCreated,
+  picked,
 }: {
   readonly onCreate: (b: NewBatch) => Promise<void>;
   readonly disabled?: boolean;
   readonly library: Library;
   readonly onCreated?: () => void;
+  /** Recipe chosen elsewhere (the advisor); `n` changes on every pick so the same recipe can be re-applied. */
+  readonly picked?: { readonly id: string; readonly n: number };
 }) {
   const [name, setName] = useState('');
   const [yeast, setYeast] = useState('');
@@ -33,14 +36,20 @@ export function NewBatchForm({
   const [end, setEnd] = useState('');
   const [problem, setProblem] = useState<string | null>(null);
 
-  const chooseRecipe = (id: string) => {
+  const chooseRecipe = (id: string, replaceName = false) => {
     setRecipeId(id);
     const r = library.recipeById.get(id);
     if (!r) return;
     setOg((r.ogPoints / 1000).toFixed(3));
     if (r.yeastId) setYeastId(r.yeastId);
-    if (!name.trim()) setName(r.name);
+    if (replaceName || !name.trim()) setName(r.name);
   };
+
+  const [appliedPick, setAppliedPick] = useState(0);
+  if (picked && picked.n !== appliedPick) {
+    setAppliedPick(picked.n);
+    chooseRecipe(picked.id, true);
+  }
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
