@@ -19,6 +19,8 @@ Owner/user: chmitch. Everything lives in the user's own resources (resource grou
 
 For an executive-level visual of the telemetry, app data, recipe import and AI paths, see the [architecture diagram in the README](README.md#architecture-at-a-glance). Its [editable draw.io source](docs/diagrams/brewiq-overview.drawio) and [exported PNG](docs/diagrams/brewiq-overview.png) live in `docs\diagrams`. It uses draw.io's native Azure/Power Platform service icons and embedded official Fabric icons; generic symbols represent the app, app data and knowledge files without implying extra Azure resources. An illustrated hardware inset shows the Tilt inside a sealed conical fermenter (cutaway view), broadcasting over Bluetooth to a Raspberry Pi. An original bearded brewer avatar represents the signed-in user; all three original SVG illustrations are embedded in the diagram and kept alongside it for reuse. The flows below retain the component-level detail.
 
+Telemetry arrows show data flow, not which service initiates a read: **Eventstream reads from IoT Hub and writes to the Eventhouse's `TiltEvents` table**. The Power BI semantic model reads the stored telemetry. Eventstream and Eventhouse have separate nodes in the visual.
+
 ```
 Tilt device (simulated by Fabric notebook TiltEvent-Simulator)
   -> Azure IoT Hub (cgmbrewiq-iothub, device tiltsim, consumer group tiltstreaming)

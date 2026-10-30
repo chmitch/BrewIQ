@@ -29,11 +29,11 @@ No hardware yet? The `TiltEvent-Simulator` notebook generates realistic Tilt eve
 
 ## How it's built
 
-Built on Azure and Microsoft Fabric. A Tilt hydrometer (or the included simulator) sends gravity and temperature to IoT Hub; an eventstream lands the events in an Eventhouse; a Power BI semantic model exposes them to a Rayfin (Fabric Apps) web app that manages batches, recipes and yeasts.
+Built on Azure and Microsoft Fabric. A Tilt hydrometer (or the included simulator) sends gravity and temperature to IoT Hub. Fabric Eventstream reads those messages and writes them to the Eventhouse's `TiltEvents` table. A Power BI semantic model exposes the stored readings to a Rayfin (Fabric Apps) web app that manages batches, recipes and yeasts.
 
 ### Architecture at a glance
 
-![BrewIQ architecture: a Tilt inside a conical fermenter sends readings over Bluetooth to a Raspberry Pi, then through Azure IoT Hub and Microsoft Fabric to the web app, with app data, recipe import and Foundry AI alongside it. A simulator provides an alternative telemetry source.](docs/diagrams/brewiq-overview.png)
+![BrewIQ architecture: a Tilt inside a conical fermenter sends readings over Bluetooth to a Raspberry Pi and Azure IoT Hub. Fabric Eventstream reads from IoT Hub and writes to Eventhouse; Power BI exposes the stored readings to the web app. App data, recipe import and Foundry AI sit alongside it. A simulator provides an alternative telemetry source.](docs/diagrams/brewiq-overview.png)
 
 [Edit the diagram in draw.io](docs/diagrams/brewiq-overview.drawio). The PNG is a local draw.io export; re-export it after editing the source (PNG format, light theme, page size, 200% zoom).
 
